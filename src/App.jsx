@@ -13,7 +13,7 @@ function Grain() {
         this.patternScaleX = 1;
         this.patternScaleY = 1;
         this.patternRefreshInterval = 3; // 8
-        this.patternAlpha = 20; // int between 0 and 255,
+        this.patternAlpha = 15; // int between 0 and 255,
   
         /**
      * Create canvas
@@ -103,6 +103,14 @@ function Grain() {
     <canvas className="grain"></canvas>
   )
 }
+function Flag() {
+  return (
+    <div className="flag">
+      <img src="flag-left.svg" alt=""/>
+      <img src="flag-right.svg" alt=""/>
+    </div>
+  )
+}
 function Logo() {
   return (
     <>
@@ -140,16 +148,36 @@ function Link() {
   return (
     <>
       <h1 className="title">链接</h1>
-      <p>巴拉巴拉巴拉巴拉巴拉巴拉</p>
+      <div className="content">
+        <ul>
+          <li><i className="iconfont icon-weibo"></i></li>
+          <li><i className="iconfont icon-bili"></i></li>
+          <li><i className="iconfont icon-steam"></i></li>
+          <li><i className="iconfont icon-neteasemusic"></i></li>
+          <li><i className="iconfont icon-github"></i></li>
+          <li><i className="iconfont icon-zhihu"></i></li>
+          <li><i className="iconfont icon-douban"></i></li>
+          <li><i className="iconfont icon-twitter"></i></li>
+        </ul>
+      </div>
     </>
   )
 }
-function Flag() {
+function NetEaseMusic() {
   return (
-    <div className="flag">
-      <img src="flag-left.svg" alt=""/>
-      <img src="flag-right.svg" alt=""/>
+    <>
+    <h1 className="title">网易云音乐·红心</h1>
+    <div className="content">
+      <div className="music">
+        <img src="music.png" alt=""/>
+        <div className="music-info">
+          <h2 className="music-title">イこうぜ☆パラダイス</h2>
+          <p className="music-tip">TV动画《异种族风俗娘评鉴指南》片头曲</p>
+          <p className="music-time">红心于3天前</p>
+        </div>
+      </div>
     </div>
+    </>
   )
 }
 function App() {
@@ -162,7 +190,7 @@ function App() {
     change: { x: 0, y: 0 },
     margin: { x: 0, y: 0 },
     bodyRect: { w: 0, h: 0 },
-    classList: ['logo', 'link', 'about', 'tip']
+    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili']
   })
   const requestRef = useRef()
   // 按下鼠标
@@ -260,14 +288,17 @@ function App() {
     const type = [
       [4, 4], [2, 2], [1, 2], [2, 1]
     ]
+    // 第四个开始用于测试
     const defalutGrid = [
       [[11, 15], [5, 5]],
       [[13, 20], [2, 5]],
       [[15, 20], [3, 5]],
-      [[16, 15], [1, 5]]
+      [[16, 15], [1, 5]],
+      [[14, 25], [2, 4]], //网易云音乐
+      [[16, 25], [3, 5]]  //哔哩哔哩追番
     ]
     let nowType = 0
-    let finish = true
+    let finish = false
     let wrong = 0
     // 完成默认点
     defalutGrid.forEach(item => {
@@ -314,14 +345,14 @@ function App() {
       }
     }
     // 放入最小单元
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        if (!list[i][j]) {
-          grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
-          state.current.classList.push('tree')
-        }
-      }
-    }
+    // for (let i = 0; i < height; i++) {
+    //   for (let j = 0; j < width; j++) {
+    //     if (!list[i][j]) {
+    //       grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
+    //       state.current.classList.push('tree')
+    //     }
+    //   }
+    // }
     setGridList(grids)
     console.log(list)
     console.log(grids)
@@ -362,6 +393,21 @@ function App() {
               { state.current.classList[index] == 'tip' && <Tip/> }
               { state.current.classList[index] == 'tree' &&
                 <img src={`tree${Math.floor(Math.random() * 3 + 1)}.png`} alt=""/>
+              }
+              { state.current.classList[index] == 'neteasemusic' && <NetEaseMusic/> }
+              { state.current.classList[index] == 'bilibili' && 
+                <>
+                  <h1 className="title">哔哩哔哩·追番</h1>
+                  <div className="content">
+                    <div className="bilibili-anime">
+                      <img src="anime.webp" alt=""/>
+                      <div className="bilibili-info">
+                        <h2>Re：从零开始的异世界生活 第二季 后半</h2>
+                        <p>追番于5天前</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
               }
             </div>
           ))

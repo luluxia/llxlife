@@ -1,7 +1,9 @@
-@import url('//at.alicdn.com/t/font_2428102_368vnzl368m.css')
+@import url('//at.alicdn.com/t/font_2428102_8f6edri32z5.css')
 *
   margin: 0
   padding: 0
+*, *::after, *::before
+  box-sizing: border-box
 body
   overflow: hidden
   background: #FFFDF1
@@ -69,8 +71,15 @@ img
     border-right: 0.5em solid transparent
     position: absolute
 .content
+  position: absolute
+  bottom: 0
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
   padding: 1.5em
-  margin-top: 2em
+  width: 100%
+  height: calc(100% - 2.5em)
 .hide
   opacity: 0
   transform: scale(0)
@@ -78,7 +87,8 @@ img
 .tree
   img
     width: 100%
-// 单独块
+// 内容块
+// 内容块 - LOGO
 .logo
   background-color: rgba(171, 205, 3, 0.1)
   border-color: #ABCD03
@@ -91,6 +101,7 @@ img
   position: absolute
   bottom: 1em
   opacity: 0.8
+// 内容块 - 提示
 .tip
   background-color: rgba(127, 96, 71, 0.1)
   border-color: #7F6047
@@ -107,6 +118,7 @@ img
   transform: rotate(15deg)
   font-size: 5em
   opacity: 0.2
+// 内容块 - 关于
 .about
   background-color: rgba(233, 82, 142, 0.1)
   border-color: #E9528E
@@ -122,8 +134,9 @@ img
     color: #E9528E
     letter-spacing: 0.1em
     text-indent: 2em
-    margin: 0.5em 0
+    margin: 0.25em 0
     text-align: justify
+// 内容块 - 链接
 .link
   background-color: rgba(0, 166, 227, 0.1)
   border-color: #00A5E3
@@ -133,5 +146,105 @@ img
     &::after
       border-top: 0.75em solid #00A5E3
       border-bottom: 0.75em solid #00A5E3
-.test
-  border-color: #eee
+  ul
+    display: flex
+    justify-content: space-between
+    width: 100%
+    margin-bottom: 1em
+  li
+    list-style: none
+    padding: 0.5em
+    border-radius: 2em
+    box-shadow: 4px 4px rgb(255 255 255 / 80%), 4px 4px rgb(255 255 255 / 80%) inset
+    color: #00A5E3
+    border: 3px dashed #00A5E3
+    transition: all 0.3s
+    .iconfont
+      transition: color 0.3s
+    &:nth-child(even)
+      transform: translate(0, 1em)
+    &:hover
+      background: #fff
+      box-shadow: 4px 4px rgb(0 0 0 / 10%)
+      .icon-weibo
+        color: #D52C2B
+      .icon-bili
+        color: #FB7299
+      .icon-douban
+        color: #2E963D
+      .icon-neteasemusic
+        color: #C20C0C
+      .icon-steam
+        color: #171A21
+      .icon-zhihu
+        color: #0066FF
+      .icon-github
+        color: #2D333B
+      .icon-twitter
+        color: #27A6D1
+    i
+      font-size: 1.5em
+// 内容块 - 网易云音乐
+.neteasemusic
+  color: #C20C0C
+  border-color: #C20C0C
+  background-color: rgba(194, 12, 12, 0.1)
+  box-shadow: 5px 5px rgba(194, 12, 12, 0.1)
+  .title
+    background: #C20C0C
+    &::after
+      border-top: 0.75em solid #C20C0C
+      border-bottom: 0.75em solid #C20C0C
+.music
+  display: flex
+  justify-content: center
+  align-items: center
+  border-radius: 0.5em
+  width: 100%
+  img
+    width: 5em
+    border-radius: 5em
+    margin-right: 0.5em
+    border: 3px dashed
+    padding: 0.2em
+  .music-title, .music-tip
+    text-overflow: ellipsis
+    white-space: nowrap
+    overflow: hidden
+    width: 12rem
+  .music-title
+    font-size: 1.2em
+  .music-tip
+    font-size: 0.8em
+    opacity: 0.5
+  .music-time
+    font-weight: bold
+    letter-spacing: 0.1em
+    margin-top: 0.5em
+// 内容块 - 哔哩哔哩
+.bilibili
+  color: #FB7299
+  border-color: #FB7299
+  background-color: rgba(251, 114, 153, 0.1)
+  box-shadow: 5px 5px rgba(251, 114, 153, 0.1)
+  .title
+    background: #FB7299
+    &::after
+      border-top: 0.75em solid #FB7299
+      border-bottom: 0.75em solid #FB7299
+.bilibili-anime
+  display: flex
+  flex-direction: row
+  align-items: center
+  img
+    height: 10em
+    border: 3px dashed
+    padding: 0.2em
+    margin-right: 1em
+    border-radius: 1em
+  h2
+    font-size: 1.5em
+  p
+    font-weight: bold
+    letter-spacing: 0.1em
+    margin-top: 2em
