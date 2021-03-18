@@ -169,8 +169,8 @@ function App() {
   function sliderDown(e) {
     state.current.mouseDown = 1
     state.current.mouse = {
-      x: e.clientX || e.touches[0].clientX,
-      y: e.clientY || e.touches[0].clientY
+      x: e.clientX ?? e.touches[0].clientX,
+      y: e.clientY ?? e.touches[0].clientY
     }
     state.current.past = {
       x: state.current.offset.x,
@@ -181,8 +181,8 @@ function App() {
   // 移动鼠标
   function sliderMove(e) {
     if (state.current.mouseDown) {
-      const X = e.clientX || e.touches[0].clientX
-      const Y = e.clientY || e.touches[0].clientY
+      const X = e.clientX ?? e.touches[0].clientX
+      const Y = e.clientY ?? e.touches[0].clientY
       state.current.change = {
         x: state.current.mouse.x - X,
         y: state.current.mouse.y - Y
@@ -202,7 +202,7 @@ function App() {
         state.current.past.y = state.current.margin.y
         state.current.mouse.y = Y
       }
-      // 右边界
+      // 下边界
       if (state.current.offset.y == -state.current.margin.y) {
         state.current.past.y = -state.current.margin.y
         state.current.mouse.y = Y
