@@ -1,0 +1,137 @@
+@import url('//at.alicdn.com/t/font_2428102_368vnzl368m.css')
+*
+  margin: 0
+  padding: 0
+body
+  overflow: hidden
+  background: #FFFDF1
+img
+  -webkit-user-drag: none
+.grain
+  position: absolute
+  width: 100vw
+  height: 100vh
+  z-index: 1
+  pointer-events: none
+.App
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100vw
+  height: 100vh
+  overflow: hidden
+.flag
+  position: absolute
+  width: 100vw
+  z-index: 1
+  display: flex
+  justify-content: space-between
+  pointer-events: none
+.main
+  display: grid
+  grid-template-columns: repeat(40, 5em)
+  grid-template-rows: repeat(30, 5em)
+  grid-column-gap: 5px
+  grid-row-gap: 5px
+  will-change: transform
+.block
+  background-image: url('pattern (1).png')
+  user-select: none
+  border: 5px solid
+  border-radius: 1em
+  border-color: transparent
+  will-change: transform
+  transition: transform 0.6s, opacity 0.6s
+  opacity: 1
+
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+.title
+  position: absolute
+  top: 0.5em
+  left: 0
+  color: #fff
+  font-size: 1.25em
+  height: 1.5em
+  line-height: 1.5em
+  padding-left: 1.5rem
+  padding-right: 1.22rem
+  letter-spacing: 0.2em
+  &::after
+    display: block
+    content: ""
+    top: 0
+    left: 100%
+    width: 0
+    height: 0
+    border-right: 0.5em solid transparent
+    position: absolute
+.content
+  padding: 1.5em
+  margin-top: 2em
+.hide
+  opacity: 0
+  transform: scale(0)
+// 装饰块
+.tree
+  img
+    width: 100%
+// 单独块
+.logo
+  background-color: rgba(171, 205, 3, 0.1)
+  border-color: #ABCD03
+  box-shadow: 5px 5px rgba(171, 205, 3, 0.1)
+  img
+    width: 100%
+.copyright
+  font-size: 0.8em
+  color: #ABCD03
+  position: absolute
+  bottom: 1em
+  opacity: 0.8
+.tip
+  background-color: rgba(127, 96, 71, 0.1)
+  border-color: #7F6047
+  color: #7F6047
+  font-weight: bold
+  letter-spacing: 0.1em
+  line-height: 1.5em
+  box-shadow: 5px 5px rgba(127, 96, 71, 0.1)
+  overflow: hidden
+.icon-tuozhuai
+  position: absolute
+  right: -0.5rem
+  bottom: 1rem
+  transform: rotate(15deg)
+  font-size: 5em
+  opacity: 0.2
+.about
+  background-color: rgba(233, 82, 142, 0.1)
+  border-color: #E9528E
+  box-shadow: 5px 5px rgba(233, 82, 142, 0.1)
+  .title
+    background: #E9528E
+    &::after
+      border-top: 0.75em solid #E9528E
+      border-bottom: 0.75em solid #E9528E
+  p
+    line-height: 1.5em
+    font-weight: bold
+    color: #E9528E
+    letter-spacing: 0.1em
+    text-indent: 2em
+    margin: 0.5em 0
+    text-align: justify
+.link
+  background-color: rgba(0, 166, 227, 0.1)
+  border-color: #00A5E3
+  box-shadow: 5px 5px rgba(0, 166, 227, 0.1)
+  .title
+    background: #00A5E3
+    &::after
+      border-top: 0.75em solid #00A5E3
+      border-bottom: 0.75em solid #00A5E3
+.test
+  border-color: #eee
