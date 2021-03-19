@@ -190,8 +190,10 @@ function App() {
     change: { x: 0, y: 0 },
     margin: { x: 0, y: 0 },
     bodyRect: { w: 0, h: 0 },
-    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili']
+    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili'],
+    blockRects: []
   })
+  const blockRef = useRef([])
   const requestRef = useRef()
   // 按下鼠标
   function sliderDown(e) {
@@ -270,13 +272,18 @@ function App() {
   const hide = _.throttle(() => {
     const bodyWidth = state.current.bodyRect.w
     const bodyHeight = state.current.bodyRect.h
-    document.querySelectorAll('.block').forEach(dom => {
-      const rect = dom.getClientRects()[0]
-      const [top, left, right, height] = [rect.top, rect.left, rect.right, rect.height]
+    state.current.blockRects.forEach((rect, index) => {
+      const [x , y] = [state.current.offset.x, state.current.offset.y]
+      const [top, left, right, height] = [rect.top + y, rect.left + x, rect.right + x, rect.height]
+      const target = blockRef.current[index]
       if (top < -height || top > bodyHeight || right < 0 || left > bodyWidth) {
-        dom.classList.add('hide')
+        target.style.display = 'none'
+        target.classList.add('hide')
       } else {
-        dom.classList.remove('hide')
+        target.style.display = 'flex'
+        setTimeout(() => {
+          target.classList.remove('hide')
+        }, 0)
       }
     })
   }, 500)
@@ -298,7 +305,7 @@ function App() {
       [[16, 25], [3, 5]]  //哔哩哔哩追番
     ]
     let nowType = 0
-    let finish = false
+    let finish = true
     let wrong = 0
     // 完成默认点
     defalutGrid.forEach(item => {
@@ -345,14 +352,14 @@ function App() {
       }
     }
     // 放入最小单元
-    // for (let i = 0; i < height; i++) {
-    //   for (let j = 0; j < width; j++) {
-    //     if (!list[i][j]) {
-    //       grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
-    //       state.current.classList.push('tree')
-    //     }
-    //   }
-    // }
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        if (!list[i][j]) {
+          grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
+          state.current.classList.push('tree')
+        }
+      }
+    }
     setGridList(grids)
     console.log(list)
     console.log(grids)
@@ -368,6 +375,22 @@ function App() {
     requestRef.current = requestAnimationFrame(render)
     return () => cancelAnimationFrame(requestRef.current)
   }, [])
+  // 记录方块边界
+  useEffect(() => {
+    if (gridList != '') {
+      const blockRects = []
+      blockRef.current.forEach(dom => {
+        const rect = dom.getClientRects()[0]
+        blockRects.push({
+          top: rect.top,
+          left: rect.left,
+          right: rect.right,
+          height: rect.height
+        })
+      })
+      state.current.blockRects = blockRects
+    }
+  }, [gridList])
   return (
     <>
     <Grain/>
@@ -386,7 +409,11 @@ function App() {
       <div className="main">
         {
           gridList.map((item, index) => (
-            <div className={`${state.current.classList[index] ?? ''} block`} style={{gridArea: item}}>
+            <div
+              ref={e => {blockRef.current[index] = e}}
+              className={`${state.current.classList[index] ?? ''} block`}
+              style={{gridArea: item}}
+            >
               { state.current.classList[index] == 'logo' && <Logo/> }
               { state.current.classList[index] == 'about' && <About/> }
               { state.current.classList[index] == 'link' && <Link/> }
