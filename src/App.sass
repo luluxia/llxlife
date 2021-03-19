@@ -50,6 +50,7 @@ img
   justify-content: center
   align-items: center
   flex-direction: column
+  overflow: hidden
 .title
   position: absolute
   top: 0.5em
@@ -85,6 +86,10 @@ img
   transform: scale(0)
 // 装饰块
 .tree
+  border-radius: inherit
+  border: none
+  background: none
+  overflow: auto
   img
     width: 100%
 // 内容块
@@ -195,6 +200,13 @@ img
     &::after
       border-top: 0.75em solid #C20C0C
       border-bottom: 0.75em solid #C20C0C
+  .icon-neteasemusic
+    position: absolute
+    right: -1rem
+    bottom: -1rem
+    transform: rotate(15deg)
+    font-size: 5em
+    opacity: 0.2
 .music
   display: flex
   justify-content: center
@@ -214,15 +226,17 @@ img
     width: 12rem
   .music-title
     font-size: 1.2em
+    text-shadow: 2px 2px rgba(255, 255, 255, 0.8)
   .music-tip
     font-size: 0.8em
+    font-weight: bold
     opacity: 0.5
   .music-time
     font-weight: bold
     letter-spacing: 0.1em
     margin-top: 0.5em
 // 内容块 - 哔哩哔哩
-.bilibili
+.bilibili-anime, .bilibili-video
   color: #FB7299
   border-color: #FB7299
   background-color: rgba(251, 114, 153, 0.1)
@@ -232,7 +246,14 @@ img
     &::after
       border-top: 0.75em solid #FB7299
       border-bottom: 0.75em solid #FB7299
-.bilibili-anime
+  .icon-bili
+    position: absolute
+    right: 0
+    bottom: -1rem
+    transform: rotate(15deg)
+    font-size: 5em
+    opacity: 0.2
+.bilibili-anime-content
   display: flex
   flex-direction: row
   align-items: center
@@ -243,8 +264,55 @@ img
     margin-right: 1em
     border-radius: 1em
   h2
-    font-size: 1.5em
+    font-size: 1.25em
+    text-shadow: 4px 4px rgba(255, 255, 255, 0.8)
   p
     font-weight: bold
     letter-spacing: 0.1em
     margin-top: 2em
+.bilibili-video-content
+  img
+    width: 100%
+    border: 3px dashed
+    padding: 0.2em
+    border-radius: 1em
+  .bilibili-info, p
+    margin-top: 0.5em
+  h2, p
+    letter-spacing: 0.1em
+  h2
+    font-size: 1em
+    font-weight: normal
+  p
+    font-weight: bold
+// 内容块 - OSU
+.osu
+  color: #F462A3
+  border-color: #F462A3
+  background-color: rgba(244, 98, 164, 0.1)
+  box-shadow: 5px 5px rgba(244, 98, 164, 0.1)
+  .title
+    background: #F462A3
+    &::after
+      border-top: 0.75em solid #F462A3
+      border-bottom: 0.75em solid #F462A3
+.osu-map
+  position: relative
+  display: flex
+  align-items: center
+  border-radius: 0.5em
+  border: 3px dashed
+  padding: 0.2em
+.osu-pic
+  width: 100%
+  border-radius: 0.3em
+  filter: brightness(0.8)
+.record-info
+  position: absolute
+  color: #fff
+  font-size: 0.6em
+  padding-left: 1em
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.4)
+.rank
+  position: absolute
+  right: 1em

@@ -177,6 +177,58 @@ function NetEaseMusic() {
         </div>
       </div>
     </div>
+    <i className="iconfont icon-neteasemusic"></i>
+    </>
+  )
+}
+function BilibiliAnime() {
+  return (
+    <>
+    <h1 className="title">哔哩哔哩·追番</h1>
+    <div className="content">
+      <div className="bilibili-anime-content">
+        <img src="anime.webp" alt=""/>
+        <div className="bilibili-info">
+          <h2>豆瓣和steam和bangumi也可以调用这个模板</h2>
+          <p>追番于5天前</p>
+        </div>
+      </div>
+    </div>
+    <i className="iconfont icon-bili"></i>
+  </>
+  )
+}
+function BilibiliVideo() {
+  return (
+    <>
+    <h1 className="title">哔哩哔哩·收藏</h1>
+    <div className="content">
+      <div className="bilibili-video-content">
+        <img src="video.webp" alt=""/>
+        <div className="bilibili-info">
+          <h2>视频标题视频标题视频标题123</h2>
+          <p>收藏于5天前</p>
+        </div>
+      </div>
+    </div>
+    <i className="iconfont icon-bili"></i>
+  </>
+  )
+}
+function OSU() {
+  return (
+    <>
+    <h1 className="title">OSU·活动</h1>
+    <div className="content">
+      <div className="osu-map">
+        <img className="osu-pic" src="osu.jpg" alt=""/>
+        <div className="record-info">
+          <h2>LiSA - Gurenge feat. Un3h (dj-Jo Remix) [Muzukashii]</h2>
+          <p>7小时前取得 #141</p>
+        </div>
+        <img className="rank" src="osurank.svg" alt=""/>
+      </div>
+    </div>
     </>
   )
 }
@@ -190,7 +242,7 @@ function App() {
     change: { x: 0, y: 0 },
     margin: { x: 0, y: 0 },
     bodyRect: { w: 0, h: 0 },
-    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili'],
+    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu'],
     blockRects: []
   })
   const blockRef = useRef([])
@@ -283,7 +335,7 @@ function App() {
         target.style.display = 'flex'
         setTimeout(() => {
           target.classList.remove('hide')
-        }, 0)
+        }, 50)
       }
     })
   }, 500)
@@ -302,10 +354,12 @@ function App() {
       [[15, 20], [3, 5]],
       [[16, 15], [1, 5]],
       [[14, 25], [2, 4]], //网易云音乐
-      [[16, 25], [3, 5]]  //哔哩哔哩追番
+      [[16, 25], [3, 4]], //哔哩哔哩追番
+      [[19, 25], [4, 4]], //哔哩哔哩收藏/上传
+      [[14, 29], [2, 4]]  //OSU
     ]
     let nowType = 0
-    let finish = true
+    let finish = false
     let wrong = 0
     // 完成默认点
     defalutGrid.forEach(item => {
@@ -352,14 +406,14 @@ function App() {
       }
     }
     // 放入最小单元
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        if (!list[i][j]) {
-          grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
-          state.current.classList.push('tree')
-        }
-      }
-    }
+    // for (let i = 0; i < height; i++) {
+    //   for (let j = 0; j < width; j++) {
+    //     if (!list[i][j]) {
+    //       grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
+    //       state.current.classList.push('tree')
+    //     }
+    //   }
+    // }
     setGridList(grids)
     console.log(list)
     console.log(grids)
@@ -422,20 +476,9 @@ function App() {
                 <img src={`tree${Math.floor(Math.random() * 3 + 1)}.png`} alt=""/>
               }
               { state.current.classList[index] == 'neteasemusic' && <NetEaseMusic/> }
-              { state.current.classList[index] == 'bilibili' && 
-                <>
-                  <h1 className="title">哔哩哔哩·追番</h1>
-                  <div className="content">
-                    <div className="bilibili-anime">
-                      <img src="anime.webp" alt=""/>
-                      <div className="bilibili-info">
-                        <h2>Re：从零开始的异世界生活 第二季 后半</h2>
-                        <p>追番于5天前</p>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              }
+              { state.current.classList[index] == 'bilibili-anime' && <BilibiliAnime/> }
+              { state.current.classList[index] == 'bilibili-video' && <BilibiliVideo/> }
+              { state.current.classList[index] == 'osu' && <OSU/> }
             </div>
           ))
         }
