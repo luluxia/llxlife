@@ -173,7 +173,7 @@ function NetEaseMusic() {
         <div className="music-info">
           <h2 className="music-title">イこうぜ☆パラダイス</h2>
           <p className="music-tip">TV动画《异种族风俗娘评鉴指南》片头曲</p>
-          <p className="music-time">红心于3天前</p>
+          <p className="music-time">三天前</p>
         </div>
       </div>
     </div>
@@ -190,7 +190,7 @@ function BilibiliAnime() {
         <img src="anime.webp" alt=""/>
         <div className="bilibili-info">
           <h2>豆瓣和steam和bangumi也可以调用这个模板</h2>
-          <p>追番于5天前</p>
+          <p>五天前</p>
         </div>
       </div>
     </div>
@@ -207,7 +207,7 @@ function BilibiliVideo() {
         <img src="video.webp" alt=""/>
         <div className="bilibili-info">
           <h2>视频标题视频标题视频标题123</h2>
-          <p>收藏于5天前</p>
+          <p>五天前</p>
         </div>
       </div>
     </div>
@@ -232,6 +232,19 @@ function OSU() {
     </>
   )
 }
+function Github() {
+  return (
+    <>
+    <h1 className="title">Github·活动</h1>
+    <div className="content">
+      <h2>pushed to <span className="github-link">master</span> at <span className="github-link">luluxia/llxlife</span></h2>
+      <p className="github-info"><span className="github-link">0f7b44</span> 优化动画性能</p>
+      <p className="time">一天前</p>
+    </div>
+    <i className="iconfont icon-github"></i>
+    </>
+  )
+}
 function App() {
   const [gridList, setGridList] = useState([])
   const state = useRef({
@@ -242,7 +255,7 @@ function App() {
     change: { x: 0, y: 0 },
     margin: { x: 0, y: 0 },
     bodyRect: { w: 0, h: 0 },
-    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu'],
+    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu', 'github'],
     blockRects: []
   })
   const blockRef = useRef([])
@@ -356,7 +369,8 @@ function App() {
       [[14, 25], [2, 4]], //网易云音乐
       [[16, 25], [3, 4]], //哔哩哔哩追番
       [[19, 25], [4, 4]], //哔哩哔哩收藏/上传
-      [[14, 29], [2, 4]]  //OSU
+      [[14, 29], [2, 4]], //OSU
+      [[16, 29], [2, 5]]  //Github
     ]
     let nowType = 0
     let finish = false
@@ -479,6 +493,7 @@ function App() {
               { state.current.classList[index] == 'bilibili-anime' && <BilibiliAnime/> }
               { state.current.classList[index] == 'bilibili-video' && <BilibiliVideo/> }
               { state.current.classList[index] == 'osu' && <OSU/> }
+              { state.current.classList[index] == 'github' && <Github/> }
             </div>
           ))
         }
