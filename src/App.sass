@@ -33,8 +33,8 @@ img
   display: grid
   grid-template-columns: repeat(40, 5em)
   grid-template-rows: repeat(30, 5em)
-  grid-column-gap: 5px
-  grid-row-gap: 5px
+  grid-column-gap: 10px
+  grid-row-gap: 10px
   will-change: transform
 .block
   background-image: url('pattern (1).png')
@@ -85,13 +85,19 @@ img
   opacity: 0
   transform: scale(0)
 // 装饰块
-.tree
+.painting
   border-radius: inherit
   border: none
   background: none
-  overflow: auto
+  overflow: inherit
   img
     width: 100%
+.round
+  div
+    background-image: url('pattern (1).png')
+    width: 100%
+    height: 100%
+    border-radius: 50%
 // 内容块
 // 内容块 - LOGO
 .logo

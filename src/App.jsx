@@ -255,7 +255,8 @@ function App() {
     change: { x: 0, y: 0 },
     margin: { x: 0, y: 0 },
     bodyRect: { w: 0, h: 0 },
-    classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu', 'github'],
+    classList: ['logo', 'link', 'about', 'tip'],
+    // classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu', 'github'],
     blockRects: []
   })
   const blockRef = useRef([])
@@ -358,22 +359,23 @@ function App() {
     const grids = []
     const list = Array(height).fill(0).map(() => { return Array(width).fill(0) })
     const type = [
-      [4, 4], [2, 2], [1, 2], [2, 1]
+      [4, 4], [3, 4], [2, 4], [2, 5], [2, 2]
     ]
+    const typeNum = [0, 0, 0, 0, 0]
     // 第四个开始用于测试
     const defalutGrid = [
       [[11, 15], [5, 5]],
       [[13, 20], [2, 5]],
       [[15, 20], [3, 5]],
       [[16, 15], [1, 5]],
-      [[14, 25], [2, 4]], //网易云音乐
-      [[16, 25], [3, 4]], //哔哩哔哩追番
-      [[19, 25], [4, 4]], //哔哩哔哩收藏/上传
-      [[14, 29], [2, 4]], //OSU
-      [[16, 29], [2, 5]]  //Github
+      // [[14, 25], [2, 4]], //网易云音乐
+      // [[16, 25], [3, 4]], //哔哩哔哩追番
+      // [[19, 25], [4, 4]], //哔哩哔哩收藏/上传
+      // [[14, 29], [2, 4]], //OSU
+      // [[16, 29], [2, 5]]  //Github
     ]
     let nowType = 0
-    let finish = false
+    let finish = true
     let wrong = 0
     // 完成默认点
     defalutGrid.forEach(item => {
@@ -388,8 +390,12 @@ function App() {
     while (finish) {
       let check = true
       // 随机起始点
-      const x = Math.floor(Math.random() * (height - type[nowType][0] + 1))
-      const y = Math.floor(Math.random() * (width - type[nowType][1] + 1))
+      let x = Math.floor(Math.random() * (height - type[nowType][0] + 1))
+      let y = Math.floor(Math.random() * (width - type[nowType][1] + 1))
+      while (list[x][y]) {
+        x = Math.floor(Math.random() * (height - type[nowType][0] + 1))
+        y = Math.floor(Math.random() * (width - type[nowType][1] + 1))
+      }
       // 判定起始点可用
       for (let i = x; (i < x + type[nowType][0]) && check; i++) {
         for (let j = y; (j < y + type[nowType][1]) && check; j++) {
@@ -407,10 +413,21 @@ function App() {
           }
         }
         grids.push([`${x + 1} / ${y + 1} / ${x + 1 + type[nowType][0]} / ${y + 1 + type[nowType][1]}`])
-        state.current.classList.push('test')
+        if (nowType == 0) {
+          state.current.classList.push('bilibili-video')
+        } else if (nowType == 1) {
+          state.current.classList.push('bilibili-anime')
+        } else if (nowType == 2) {
+          state.current.classList.push('neteasemusic')
+        } else if (nowType == 3) {
+          state.current.classList.push('github')
+        } else if (nowType == 4) {
+          state.current.classList.push('round')
+        }
+        typeNum[nowType]++
       }
       // 放置下个类型
-      if (wrong >= 200) {
+      if (wrong >= 200 || typeNum[nowType] == 15) {
         if (nowType < type.length - 1) {
           wrong = 0
           nowType++
@@ -420,17 +437,18 @@ function App() {
       }
     }
     // 放入最小单元
-    // for (let i = 0; i < height; i++) {
-    //   for (let j = 0; j < width; j++) {
-    //     if (!list[i][j]) {
-    //       grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
-    //       state.current.classList.push('tree')
-    //     }
-    //   }
-    // }
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        if (!list[i][j]) {
+          grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
+          state.current.classList.push('painting')
+        }
+      }
+    }
     setGridList(grids)
     console.log(list)
     console.log(grids)
+    console.log(typeNum)
     // 计算边界
     const mainDOM = document.querySelector('.main')
     const body = document.body
@@ -482,13 +500,16 @@ function App() {
               className={`${state.current.classList[index] ?? ''} block`}
               style={{gridArea: item}}
             >
+              { state.current.classList[index] == 'painting' &&
+                <img src={`painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
+              }
+              { state.current.classList[index] == 'round' &&
+                <div style={{backgroundColor: `#${['ABCD03', 'FABE00', 'E9528E', '00A5E3'][Math.floor(Math.random() * 4)]}`}}></div>
+              }
               { state.current.classList[index] == 'logo' && <Logo/> }
               { state.current.classList[index] == 'about' && <About/> }
               { state.current.classList[index] == 'link' && <Link/> }
               { state.current.classList[index] == 'tip' && <Tip/> }
-              { state.current.classList[index] == 'tree' &&
-                <img src={`tree${Math.floor(Math.random() * 3 + 1)}.png`} alt=""/>
-              }
               { state.current.classList[index] == 'neteasemusic' && <NetEaseMusic/> }
               { state.current.classList[index] == 'bilibili-anime' && <BilibiliAnime/> }
               { state.current.classList[index] == 'bilibili-video' && <BilibiliVideo/> }
