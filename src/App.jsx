@@ -1,7 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import _ from 'lodash'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/zh-cn'
 import './App.sass'
-
+import apiData from './data.json'
+dayjs.locale('zh-cn')
+dayjs.extend(relativeTime)
+const Context = React.createContext({})
 function Grain() {
   class Grain {
     constructor (el) {
@@ -116,6 +122,7 @@ function Logo() {
     <>
       <img src="logo.svg" alt=""/>
       <p className="copyright">© 2021 Luluxia. All Rights Reserved. 萌ICP备 20201224号</p>
+      {/* <p>{data.biliBangumi[0]['title']}</p> */}
     </>
   )
 }
@@ -163,17 +170,18 @@ function Link() {
     </>
   )
 }
-function NetEaseMusic() {
+function NetEaseMusic(props) {
+  const { netEaseMusic } = useContext(Context)
   return (
     <>
     <h1 className="title">网易云音乐·红心</h1>
     <div className="content">
       <div className="music">
-        <img src="music.png" alt=""/>
+        <img src={`${netEaseMusic[props.id].pic}?param=200y200`} alt=""/>
         <div className="music-info">
-          <h2 className="music-title">イこうぜ☆パラダイス</h2>
-          <p className="music-tip">TV动画《异种族风俗娘评鉴指南》片头曲</p>
-          <p className="music-time">三天前</p>
+          <h2 className="music-title">{netEaseMusic[props.id].title}</h2>
+          <p className="music-tip">{netEaseMusic[props.id].sub}</p>
+          {/* <p className="music-time">三天前</p> */}
         </div>
       </div>
     </div>
@@ -181,16 +189,17 @@ function NetEaseMusic() {
     </>
   )
 }
-function BilibiliAnime() {
+function BilibiliAnime(props) {
+  const { biliBangumi } = useContext(Context)
   return (
     <>
     <h1 className="title">哔哩哔哩·追番</h1>
     <div className="content">
       <div className="bilibili-anime-content">
-        <img src="anime.webp" alt=""/>
+        <img src={biliBangumi[props.id].pic} referrerPolicy="no-referrer" alt=""/>
         <div className="bilibili-info">
-          <h2>豆瓣和steam和bangumi也可以调用这个模板</h2>
-          <p>五天前</p>
+          <h2 className={biliBangumi[props.id].title.length <= 4 ? 'big-title' : undefined}>{biliBangumi[props.id].title}</h2>
+          <p>{biliBangumi[props.id].progress}</p>
         </div>
       </div>
     </div>
@@ -198,16 +207,17 @@ function BilibiliAnime() {
   </>
   )
 }
-function BilibiliVideo() {
+function BilibiliVideo(props) {
+  const { biliStar, biliUpload } = useContext(Context)
   return (
     <>
-    <h1 className="title">哔哩哔哩·收藏</h1>
+    <h1 className="title">哔哩哔哩·{props.id < 4 ? '收藏' : '上传'}</h1>
     <div className="content">
       <div className="bilibili-video-content">
-        <img src="video.webp" alt=""/>
+        <img src={props.id < 4 ? biliStar[props.id].pic : biliUpload[props.id - 4].pic} referrerPolicy="no-referrer" alt=""/>
         <div className="bilibili-info">
-          <h2>视频标题视频标题视频标题123</h2>
-          <p>五天前</p>
+          <h2>{props.id < 4 ? biliStar[props.id].title : biliUpload[props.id - 4].title}</h2>
+          <p>{dayjs(dayjs.unix(props.id < 4 ? biliStar[props.id].time : biliUpload[props.id - 4].time)).fromNow()}</p>
         </div>
       </div>
     </div>
@@ -215,31 +225,61 @@ function BilibiliVideo() {
   </>
   )
 }
-function OSU() {
+function OSU(props) {
+  const { osuActicity } = useContext(Context)
   return (
     <>
     <h1 className="title">OSU·活动</h1>
     <div className="content">
       <div className="osu-map">
-        <img className="osu-pic" src="osu.jpg" alt=""/>
+        <img className="osu-pic" src={osuActicity[props.id - 4].img} alt=""/>
         <div className="record-info">
-          <h2>LiSA - Gurenge feat. Un3h (dj-Jo Remix) [Muzukashii]</h2>
-          <p>7小时前取得 #141</p>
+          <h2>{osuActicity[props.id - 4].title}</h2>
+          <p>{dayjs(osuActicity[props.id - 4].time).fromNow()}取得 #{osuActicity[props.id - 4].rank}</p>
         </div>
-        <img className="rank" src="osurank.svg" alt=""/>
+        <img className="rank" src={`osurank-${osuActicity[props.id - 4].scoreRank}.svg`} alt=""/>
       </div>
     </div>
     </>
   )
 }
-function Github() {
+function NintendoSwitchGame(props) {
+  const { nintendoSwitchGame } = useContext(Context)
+  return (
+    <>
+    <h1 className="title">Nintendo Switch·活动</h1>
+    <div className="content">
+      <div className="nintendo-switch-content">
+        <img src={nintendoSwitchGame[props.id - 4].pic} alt=""/>
+        <div className="nintendo-switch-info">
+          <h2>{nintendoSwitchGame[props.id - 4].title}</h2>
+          <p>{dayjs(nintendoSwitchGame[props.id - 4].time).fromNow()}</p>
+        </div>
+      </div>
+    </div>
+    {/* <i className="iconfont icon-bili"></i> */}
+  </>
+  )
+}
+function Github(props) {
+  const { github } = useContext(Context)
   return (
     <>
     <h1 className="title">Github·活动</h1>
     <div className="content">
-      <h2>pushed to <span className="github-link">master</span> at <span className="github-link">luluxia/llxlife</span></h2>
-      <p className="github-info"><span className="github-link">0f7b44</span> 优化动画性能</p>
-      <p className="time">一天前</p>
+      { github[props.id].action == 'star' &&
+        <h2>stared <span className="github-link">{github[props.id].repo}</span></h2>
+      }
+      { github[props.id].action == 'create' &&
+        <h2>created <span className="github-link">{github[props.id].repo}</span></h2>
+      }
+      { github[props.id].action == 'push' &&
+        <>
+          <h2>pushed to <span className="github-link">{github[props.id].ref}</span> at <span className="github-link">{github[props.id].repo}</span></h2>
+          <p className="github-info"><span className="github-link">{github[props.id].commit.id}</span> {github[props.id].commit.content}</p>
+        </>
+      }
+      <p className="time">{dayjs(github[props.id].time).fromNow()}</p>
     </div>
     <i className="iconfont icon-github"></i>
     </>
@@ -248,6 +288,7 @@ function Github() {
 function App() {
   const [gridList, setGridList] = useState([])
   const state = useRef({
+    renderRun: 1,
     mouseDown: 0,
     offset: { x: 0, y: 0 },
     past: { x: 0, y: 0 },
@@ -255,12 +296,18 @@ function App() {
     change: { x: 0, y: 0 },
     margin: { x: 0, y: 0 },
     bodyRect: { w: 0, h: 0 },
-    classList: ['logo', 'link', 'about', 'tip'],
-    // classList: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu', 'github'],
+    blockInfo: [
+      { class:'logo' },
+      { class:'link' },
+      { class:'about' },
+      { class:'tip' }
+    ],
+    // blockInfo: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu', 'github'],
     blockRects: []
   })
   const blockRef = useRef([])
   const requestRef = useRef()
+  const [data, setData] = useState(apiData)
   // 按下鼠标
   function sliderDown(e) {
     state.current.mouseDown = 1
@@ -331,8 +378,27 @@ function App() {
     if (state.current.offset.y < -state.current.margin.y) {
       state.current.offset.y = -state.current.margin.y
     }
-    document.querySelector('.main').style.transform = `translate3d(${state.current.offset.x}px ,${state.current.offset.y}px, 0px)`
+    if (state.current.renderRun) {
+      document.querySelector('.main').style.transform = `translate3d(${state.current.offset.x}px ,${state.current.offset.y}px, 0px)`
+    }
     requestRef.current = requestAnimationFrame(render)
+  }
+  // 返回中间点
+  function returnCenter() {
+    state.current = {
+      ...state.current,
+      offset: { x: 0, y: 0 },
+      past: { x: 0, y: 0 },
+      change: { x: 0, y: 0 },
+      renderRun: 0
+    }
+    const dom = document.querySelector('.main')
+    dom.style.transition = 'transform 0.3s'
+    dom.style.transform = `translate3d(0px ,0px, 0px)`
+    setTimeout(() => {
+      dom.style.transition = 'none'
+      state.current.renderRun = 1
+    }, 300);
   }
   // 边界隐藏
   const hide = _.throttle(() => {
@@ -355,19 +421,21 @@ function App() {
   }, 500)
   useEffect(() => {
     // 初始化
-    const [height, width] = [30, 40]
+    const [height, width] = [24, 34]
     const grids = []
     const list = Array(height).fill(0).map(() => { return Array(width).fill(0) })
     const type = [
       [4, 4], [3, 4], [2, 4], [2, 5], [2, 2]
     ]
+    // 哔哩哔哩上传/收藏；哔哩哔哩追番/Switch游戏；网易云音乐红心/OSU；GitHub
+    const typeMax = [8, 8, 8, 4, 30]
     const typeNum = [0, 0, 0, 0, 0]
     // 第四个开始用于测试
     const defalutGrid = [
-      [[11, 15], [5, 5]],
-      [[13, 20], [2, 5]],
-      [[15, 20], [3, 5]],
-      [[16, 15], [1, 5]],
+      [[8, 12], [5, 5]],
+      [[10, 17], [2, 5]],
+      [[12, 17], [3, 5]],
+      [[13, 12], [1, 5]],
       // [[14, 25], [2, 4]], //网易云音乐
       // [[16, 25], [3, 4]], //哔哩哔哩追番
       // [[19, 25], [4, 4]], //哔哩哔哩收藏/上传
@@ -389,7 +457,7 @@ function App() {
     })
     while (finish) {
       let check = true
-      // 随机起始点
+      // 随机空白起始点
       let x = Math.floor(Math.random() * (height - type[nowType][0] + 1))
       let y = Math.floor(Math.random() * (width - type[nowType][1] + 1))
       while (list[x][y]) {
@@ -413,21 +481,39 @@ function App() {
           }
         }
         grids.push([`${x + 1} / ${y + 1} / ${x + 1 + type[nowType][0]} / ${y + 1 + type[nowType][1]}`])
-        if (nowType == 0) {
-          state.current.classList.push('bilibili-video')
-        } else if (nowType == 1) {
-          state.current.classList.push('bilibili-anime')
-        } else if (nowType == 2) {
-          state.current.classList.push('neteasemusic')
-        } else if (nowType == 3) {
-          state.current.classList.push('github')
-        } else if (nowType == 4) {
-          state.current.classList.push('round')
-        }
+        // if (nowType == 0) {
+        //   state.current.blockInfo.push({ class: 'bilibili-video', id: typeNum[nowType] })
+        // } else if (nowType == 1) {
+        //   state.current.blockInfo.push('bilibili-anime')
+        // } else if (nowType == 2) {
+        //   state.current.blockInfo.push('neteasemusic')
+        // } else if (nowType == 3) {
+        //   state.current.blockInfo.push('github')
+        // } else if (nowType == 4) {
+        //   state.current.blockInfo.push('round')
+        // }
+        // 哔哩哔哩上传4/收藏4；哔哩哔哩追番4/Switch游戏4；网易云音乐红心4/OSU4；GitHub4
+        const id = typeNum[nowType]
+        state.current.blockInfo.push({
+          id: id,
+          class: (() => {
+            if (nowType == 0) {
+              return 'bilibili-video'
+            } else if (nowType == 1) {
+              return id < 4 ? 'bilibili-anime' : 'nintendo-switch-game'
+            } else if (nowType == 2) {
+              return id < 4 ? 'neteasemusic' : 'osu'
+            } else if (nowType == 3) {
+              return 'github'
+            } else {
+              return 'round'
+            }
+          })()
+        })
         typeNum[nowType]++
       }
       // 放置下个类型
-      if (wrong >= 200 || typeNum[nowType] == 15) {
+      if (wrong >= 100 || typeNum[nowType] == typeMax[nowType]) {
         if (nowType < type.length - 1) {
           wrong = 0
           nowType++
@@ -441,7 +527,7 @@ function App() {
       for (let j = 0; j < width; j++) {
         if (!list[i][j]) {
           grids.push([`${i + 1} / ${j + 1} / ${i + 2} / ${j + 2}`])
-          state.current.classList.push('painting')
+          state.current.blockInfo.push({ class: 'painting' })
         }
       }
     }
@@ -481,6 +567,9 @@ function App() {
     <>
     <Grain/>
     <Flag/>
+    <div className="home">
+      <img onClick={() => {returnCenter()}} src="home.svg" alt=""/>
+    </div>
     <div
       onMouseDown={e => {sliderDown(e)}}
       onMouseMove={e => {sliderMove(e), hide()}}
@@ -492,33 +581,46 @@ function App() {
       onTouchEnd={e => {sliderUp(e)}}
       className="App"
     >
+      <Context.Provider value={{...data}}>
       <div className="main">
         {
-          gridList.map((item, index) => (
-            <div
-              ref={e => {blockRef.current[index] = e}}
-              className={`${state.current.classList[index] ?? ''} block`}
-              style={{gridArea: item}}
-            >
-              { state.current.classList[index] == 'painting' &&
-                <img src={`painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
-              }
-              { state.current.classList[index] == 'round' &&
-                <div style={{backgroundColor: `#${['ABCD03', 'FABE00', 'E9528E', '00A5E3'][Math.floor(Math.random() * 4)]}`}}></div>
-              }
-              { state.current.classList[index] == 'logo' && <Logo/> }
-              { state.current.classList[index] == 'about' && <About/> }
-              { state.current.classList[index] == 'link' && <Link/> }
-              { state.current.classList[index] == 'tip' && <Tip/> }
-              { state.current.classList[index] == 'neteasemusic' && <NetEaseMusic/> }
-              { state.current.classList[index] == 'bilibili-anime' && <BilibiliAnime/> }
-              { state.current.classList[index] == 'bilibili-video' && <BilibiliVideo/> }
-              { state.current.classList[index] == 'osu' && <OSU/> }
-              { state.current.classList[index] == 'github' && <Github/> }
-            </div>
-          ))
+          gridList.map((item, index) => {
+            const className = state.current.blockInfo[index].class
+            const id = state.current.blockInfo[index].id
+            return (
+              <div
+                ref={e => {blockRef.current[index] = e}}
+                className={`${className ?? ''} block`}
+                style={{gridArea: item}}
+              >
+                { className == 'painting' &&
+                  <img src={`painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
+                }
+                { className == 'round' &&
+                  <div
+                    style={
+                      {backgroundColor: `#${['ABCD03', 'FABE00', 'E9528E', '00A5E3'][Math.floor(Math.random() * 4)]}`}
+                    }
+                  >
+                    <img src={`https://cn.portal-pokemon.com/play/resources/pokedex${data.pokemon[id]}`} alt=""/>
+                  </div>
+                }
+                { className == 'logo' && <Logo/> }
+                { className == 'about' && <About/> }
+                { className == 'link' && <Link/> }
+                { className == 'tip' && <Tip/> }
+                { className == 'neteasemusic' && <NetEaseMusic id={id}/> }
+                { className == 'bilibili-anime' && <BilibiliAnime id={id}/> }
+                { className == 'bilibili-video' && <BilibiliVideo id={id}/> }
+                { className == 'osu' && <OSU id={id}/> }
+                { className == 'nintendo-switch-game' && <NintendoSwitchGame id={id}/> }
+                { className == 'github' && <Github id={id}/> }
+              </div>
+            )
+          })
         }
       </div>
+      </Context.Provider>
     </div>
     </>
   )

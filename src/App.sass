@@ -31,8 +31,8 @@ img
   pointer-events: none
 .main
   display: grid
-  grid-template-columns: repeat(40, 5em)
-  grid-template-rows: repeat(30, 5em)
+  grid-template-columns: repeat(34, 5em)
+  grid-template-rows: repeat(24, 5em)
   grid-column-gap: 10px
   grid-row-gap: 10px
   will-change: transform
@@ -84,6 +84,21 @@ img
 .hide
   opacity: 0
   transform: scale(0)
+.home
+  display: flex
+  justify-content: center
+  position: absolute
+  z-index: 1
+  width: 4em
+  height: 4em
+  bottom: 1em
+  right: 1em
+  border-radius: 1em
+  border: 4px solid #fff
+  background: rgba(100, 237, 172, 0.3)
+  box-shadow: 3px 3px rgba(100, 237, 172, 0.2)
+  img
+    width: 3em
 // 装饰块
 .painting
   border-radius: inherit
@@ -98,6 +113,10 @@ img
     width: 100%
     height: 100%
     border-radius: 50%
+  img
+    width: 100%
+    height: 100%
+    padding: 1em
 // 内容块
 // 内容块 - LOGO
 .logo
@@ -237,10 +256,10 @@ img
     font-size: 0.8em
     font-weight: bold
     opacity: 0.5
-  .music-time
-    font-weight: bold
-    letter-spacing: 0.1em
-    margin-top: 0.5em
+  // .music-time
+  //   font-weight: bold
+  //   letter-spacing: 0.1em
+  //   margin-top: 0.5em
 // 内容块 - 哔哩哔哩
 .bilibili-anime, .bilibili-video
   color: #FB7299
@@ -259,7 +278,7 @@ img
     transform: rotate(-6deg)
     font-size: 5em
     opacity: 0.2
-.bilibili-anime-content
+.bilibili-anime-content, .nintendo-switch-content
   display: flex
   flex-direction: row
   align-items: center
@@ -272,6 +291,8 @@ img
   h2
     font-size: 1.25em
     text-shadow: 4px 4px rgba(255, 255, 255, 0.8)
+  .big-title
+    font-size: 2em
   p
     font-weight: bold
     letter-spacing: 0.1em
@@ -355,3 +376,22 @@ img
     transform: rotate(15deg)
     font-size: 5em
     opacity: 0.2
+// 内容块 - Nintendo Switch
+.nintendo-switch-game
+  color: #E60012
+  border-color: #E60012
+  background-color: rgba(251, 114, 153, 0.1)
+  box-shadow: 5px 5px rgba(251, 114, 153, 0.1)
+  .title
+    background: #E60012
+    letter-spacing: 0.1em
+    &::after
+      border-top: 0.75em solid #E60012
+      border-bottom: 0.75em solid #E60012
+  // .icon-bili
+  //   position: absolute
+  //   right: 0
+  //   bottom: -1rem
+  //   transform: rotate(-6deg)
+  //   font-size: 5em
+  //   opacity: 0.2
