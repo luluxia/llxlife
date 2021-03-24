@@ -152,19 +152,33 @@ function About() {
   )
 }
 function Link() {
+  const { state } = useContext(Context)
+  const links = [
+    'https://weibo.com/u/1926779340',
+    'https://space.bilibili.com/1802865',
+    'https://steamcommunity.com/id/sixsixman/',
+    'https://music.163.com/#/user/home?id=52350671',
+    'https://github.com/luluxia',
+    'https://www.zhihu.com/people/lu-yang-20-42',
+    'https://www.douban.com/people/120242819/',
+    'https://twitter.com/luluxia_'
+  ]
+  function link(id) {
+    state.current.change.x || window.open(links[id])
+  }
   return (
     <>
       <h1 className="title">链接</h1>
       <div className="content">
         <ul>
-          <li><i className="iconfont icon-weibo"></i></li>
-          <li><i className="iconfont icon-bili"></i></li>
-          <li><i className="iconfont icon-steam"></i></li>
-          <li><i className="iconfont icon-neteasemusic"></i></li>
-          <li><i className="iconfont icon-github"></i></li>
-          <li><i className="iconfont icon-zhihu"></i></li>
-          <li><i className="iconfont icon-douban"></i></li>
-          <li><i className="iconfont icon-twitter"></i></li>
+          <li onMouseUp={() => link(0)}><i className="iconfont icon-weibo"></i></li>
+          <li onMouseUp={() => link(1)}><i className="iconfont icon-bili"></i></li>
+          <li onMouseUp={() => link(2)}><i className="iconfont icon-steam"></i></li>
+          <li onMouseUp={() => link(3)}><i className="iconfont icon-neteasemusic"></i></li>
+          <li onMouseUp={() => link(4)}><i className="iconfont icon-github"></i></li>
+          <li onMouseUp={() => link(5)}><i className="iconfont icon-zhihu"></i></li>
+          <li onMouseUp={() => link(6)}><i className="iconfont icon-douban"></i></li>
+          <li onMouseUp={() => link(7)}><i className="iconfont icon-twitter"></i></li>
         </ul>
       </div>
     </>
@@ -598,7 +612,7 @@ function App() {
       onTouchEnd={e => {sliderUp(e)}}
       className="App"
     >
-      <Context.Provider value={{...data}}>
+      <Context.Provider value={{...data, state}}>
       <div className="main">
         {
           gridList.map((item, index) => {

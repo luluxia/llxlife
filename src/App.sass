@@ -7,6 +7,7 @@
 body
   overflow: hidden
   background: #FFFDF1
+  touch-action: none
 img
   -webkit-user-drag: none
 .grain
@@ -53,6 +54,9 @@ img
   align-items: center
   flex-direction: column
   overflow: hidden
+  &:hover
+    transition: transform 0.3s
+    transform: scale(0.95)
 .title
   position: absolute
   top: 0.5em
@@ -185,6 +189,7 @@ img
     color: #00A5E3
     border: 3px dashed #00A5E3
     transition: all 0.3s
+    cursor: pointer
     .iconfont
       transition: color 0.3s
     &:nth-child(even)
