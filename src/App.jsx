@@ -398,6 +398,23 @@ function App() {
     setTimeout(() => {
       dom.style.transition = 'none'
       state.current.renderRun = 1
+      // 重新判断一次边界隐藏
+      const bodyWidth = state.current.bodyRect.w
+      const bodyHeight = state.current.bodyRect.h
+      state.current.blockRects.forEach((rect, index) => {
+        const [x , y] = [state.current.offset.x, state.current.offset.y]
+        const [top, left, right, height] = [rect.top + y, rect.left + x, rect.right + x, rect.height]
+        const target = blockRef.current[index]
+        if (top < -height || top > bodyHeight || right < 0 || left > bodyWidth) {
+          target.style.display = 'none'
+          target.classList.add('hide')
+        } else {
+          target.style.display = 'flex'
+          setTimeout(() => {
+            target.classList.remove('hide')
+          }, 50)
+        }
+      })
     }, 300);
   }
   // 边界隐藏
@@ -490,7 +507,7 @@ function App() {
         // } else if (nowType == 3) {
         //   state.current.blockInfo.push('github')
         // } else if (nowType == 4) {
-        //   state.current.blockInfo.push('round')
+        //   state.current.blockInfo.push('pokemon')
         // }
         // 哔哩哔哩上传4/收藏4；哔哩哔哩追番4/Switch游戏4；网易云音乐红心4/OSU4；GitHub4
         const id = typeNum[nowType]
@@ -506,7 +523,7 @@ function App() {
             } else if (nowType == 3) {
               return 'github'
             } else {
-              return 'round'
+              return 'pokemon'
             }
           })()
         })
@@ -596,14 +613,8 @@ function App() {
                 { className == 'painting' &&
                   <img src={`painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
                 }
-                { className == 'round' &&
-                  <div
-                    style={
-                      {backgroundColor: `#${['ABCD03', 'FABE00', 'E9528E', '00A5E3'][Math.floor(Math.random() * 4)]}`}
-                    }
-                  >
-                    <img src={`https://cn.portal-pokemon.com/play/resources/pokedex${data.pokemon[id]}`} alt=""/>
-                  </div>
+                { className == 'pokemon' &&
+                  <img src={`https://cn.portal-pokemon.com/play/resources/pokedex${data.pokemon[id]}`} alt=""/>
                 }
                 { className == 'logo' && <Logo/> }
                 { className == 'about' && <About/> }

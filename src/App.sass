@@ -29,6 +29,8 @@ img
   display: flex
   justify-content: space-between
   pointer-events: none
+  img
+    max-width: 40vw
 .main
   display: grid
   grid-template-columns: repeat(34, 5em)
@@ -37,7 +39,7 @@ img
   grid-row-gap: 10px
   will-change: transform
 .block
-  background-image: url('pattern (1).png')
+  background-image: url('pattern.png')
   user-select: none
   border: 5px solid
   border-radius: 1em
@@ -107,16 +109,10 @@ img
   overflow: inherit
   img
     width: 100%
-.round
-  div
-    background-image: url('pattern (1).png')
-    width: 100%
-    height: 100%
-    border-radius: 50%
+.pokemon
   img
     width: 100%
     height: 100%
-    padding: 1em
 // 内容块
 // 内容块 - LOGO
 .logo
