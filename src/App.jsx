@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 import './App.sass'
-import apiData from './data.json'
+import apiData from './api/data.json'
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
 const Context = React.createContext({})
@@ -164,7 +164,7 @@ function Link() {
     'https://twitter.com/luluxia_'
   ]
   function link(id) {
-    state.current.change.x || window.open(links[id])
+    state.current.change.x + state.current.change.y || window.open(links[id])
   }
   return (
     <>
@@ -185,17 +185,19 @@ function Link() {
   )
 }
 function NetEaseMusic(props) {
-  const { netEaseMusic } = useContext(Context)
+  const { netEaseMusic, state } = useContext(Context)
+  function link() {
+    state.current.change.x + state.current.change.y || window.open(`https://music.163.com/#/song?id=${netEaseMusic[props.id].id}`)
+  }
   return (
     <>
     <h1 className="title">网易云音乐·红心</h1>
-    <div className="content">
+    <div onClick={() => link()} className="content">
       <div className="music">
         <img src={`${netEaseMusic[props.id].pic}?param=200y200`} alt=""/>
         <div className="music-info">
           <h2 className="music-title">{netEaseMusic[props.id].title}</h2>
           <p className="music-tip">{netEaseMusic[props.id].sub}</p>
-          {/* <p className="music-time">三天前</p> */}
         </div>
       </div>
     </div>
@@ -204,11 +206,14 @@ function NetEaseMusic(props) {
   )
 }
 function BilibiliAnime(props) {
-  const { biliBangumi } = useContext(Context)
+  const { biliBangumi, state } = useContext(Context)
+  function link() {
+    state.current.change.x + state.current.change.y || window.open(biliBangumi[props.id].url)
+  }
   return (
     <>
     <h1 className="title">哔哩哔哩·追番</h1>
-    <div className="content">
+    <div onClick={() => link()} className="content">
       <div className="bilibili-anime-content">
         <img src={biliBangumi[props.id].pic} referrerPolicy="no-referrer" alt=""/>
         <div className="bilibili-info">
@@ -222,11 +227,14 @@ function BilibiliAnime(props) {
   )
 }
 function BilibiliVideo(props) {
-  const { biliStar, biliUpload } = useContext(Context)
+  const { biliStar, biliUpload, state } = useContext(Context)
+  function link() {
+    state.current.change.x + state.current.change.y || window.open(`https://www.bilibili.com/video/${props.id < 4 ? biliStar[props.id].id : biliUpload[props.id - 4].id}`)
+  }
   return (
     <>
     <h1 className="title">哔哩哔哩·{props.id < 4 ? '收藏' : '上传'}</h1>
-    <div className="content">
+    <div onClick={() => link()} className="content">
       <div className="bilibili-video-content">
         <img src={props.id < 4 ? biliStar[props.id].pic : biliUpload[props.id - 4].pic} referrerPolicy="no-referrer" alt=""/>
         <div className="bilibili-info">
@@ -240,13 +248,16 @@ function BilibiliVideo(props) {
   )
 }
 function OSU(props) {
-  const { osuActicity } = useContext(Context)
+  const { osuActicity, state } = useContext(Context)
+  function link() {
+    state.current.change.x + state.current.change.y || window.open(`https://osu.ppy.sh/b/${osuActicity[props.id - 4].id}`)
+  }
   return (
     <>
     <h1 className="title">OSU·活动</h1>
-    <div className="content">
+    <div onClick={() => link()} className="content">
       <div className="osu-map">
-        <img className="osu-pic" src={osuActicity[props.id - 4].img} alt=""/>
+        <img className="osu-pic" src={osuActicity[props.id - 4].pic} alt=""/>
         <div className="record-info">
           <h2>{osuActicity[props.id - 4].title}</h2>
           <p>{dayjs(osuActicity[props.id - 4].time).fromNow()}取得 #{osuActicity[props.id - 4].rank}</p>
@@ -258,11 +269,14 @@ function OSU(props) {
   )
 }
 function NintendoSwitchGame(props) {
-  const { nintendoSwitchGame } = useContext(Context)
+  const { nintendoSwitchGame, state } = useContext(Context)
+  function link() {
+    state.current.change.x + state.current.change.y || window.open(`https://tinfoil.io/Title/${nintendoSwitchGame[props.id - 4].id}`)
+  }
   return (
     <>
     <h1 className="title">Nintendo Switch·活动</h1>
-    <div className="content">
+    <div onClick={() => link()} className="content">
       <div className="nintendo-switch-content">
         <img src={nintendoSwitchGame[props.id - 4].pic} alt=""/>
         <div className="nintendo-switch-info">
@@ -271,26 +285,38 @@ function NintendoSwitchGame(props) {
         </div>
       </div>
     </div>
-    {/* <i className="iconfont icon-bili"></i> */}
+    <i className="iconfont icon-switch"></i>
   </>
   )
 }
 function Github(props) {
-  const { github } = useContext(Context)
+  const { github, state } = useContext(Context)
+  function link(type) {
+    console.log(type)
+    if (!(state.current.change.x + state.current.change.y)) {
+      if (type == 'repo') {
+        window.open(`https://github.com/${github[props.id].repo}`)
+      } else if (type == 'ref') {
+        window.open(`https://github.com/${github[props.id].repo}/tree/${github[props.id].ref}`)
+      } else if (type == 'commit') {
+        window.open(`https://github.com/${github[props.id].repo}/commit/${github[props.id].commit.id}`)
+      }
+    }
+  }
   return (
     <>
     <h1 className="title">Github·活动</h1>
     <div className="content">
       { github[props.id].action == 'star' &&
-        <h2>stared <span className="github-link">{github[props.id].repo}</span></h2>
+        <h2>stared <span onClick={() => link('repo')} className="github-link">{github[props.id].repo}</span></h2>
       }
       { github[props.id].action == 'create' &&
-        <h2>created <span className="github-link">{github[props.id].repo}</span></h2>
+        <h2>created <span onClick={() => link('repo')} className="github-link">{github[props.id].repo}</span></h2>
       }
       { github[props.id].action == 'push' &&
         <>
-          <h2>pushed to <span className="github-link">{github[props.id].ref}</span> at <span className="github-link">{github[props.id].repo}</span></h2>
-          <p className="github-info"><span className="github-link">{github[props.id].commit.id}</span> {github[props.id].commit.content}</p>
+          <h2>pushed to <span onClick={() => link('ref')} className="github-link">{github[props.id].ref}</span> at <span onClick={() => link('repo')} className="github-link">{github[props.id].repo}</span></h2>
+          <p className="github-info"><span onClick={() => link('commit')} className="github-link">{github[props.id].commit.id.substr(0, 7)}</span> {github[props.id].commit.content}</p>
         </>
       }
       <p className="time">{dayjs(github[props.id].time).fromNow()}</p>
@@ -316,7 +342,6 @@ function App() {
       { class:'about' },
       { class:'tip' }
     ],
-    // blockInfo: ['logo', 'link', 'about', 'tip', 'neteasemusic', 'bilibili-anime', 'bilibili-video', 'osu', 'github'],
     blockRects: []
   })
   const blockRef = useRef([])
@@ -467,11 +492,6 @@ function App() {
       [[10, 17], [2, 5]],
       [[12, 17], [3, 5]],
       [[13, 12], [1, 5]],
-      // [[14, 25], [2, 4]], //网易云音乐
-      // [[16, 25], [3, 4]], //哔哩哔哩追番
-      // [[19, 25], [4, 4]], //哔哩哔哩收藏/上传
-      // [[14, 29], [2, 4]], //OSU
-      // [[16, 29], [2, 5]]  //Github
     ]
     let nowType = 0
     let finish = true
@@ -512,17 +532,6 @@ function App() {
           }
         }
         grids.push([`${x + 1} / ${y + 1} / ${x + 1 + type[nowType][0]} / ${y + 1 + type[nowType][1]}`])
-        // if (nowType == 0) {
-        //   state.current.blockInfo.push({ class: 'bilibili-video', id: typeNum[nowType] })
-        // } else if (nowType == 1) {
-        //   state.current.blockInfo.push('bilibili-anime')
-        // } else if (nowType == 2) {
-        //   state.current.blockInfo.push('neteasemusic')
-        // } else if (nowType == 3) {
-        //   state.current.blockInfo.push('github')
-        // } else if (nowType == 4) {
-        //   state.current.blockInfo.push('pokemon')
-        // }
         // 哔哩哔哩上传4/收藏4；哔哩哔哩追番4/Switch游戏4；网易云音乐红心4/OSU4；GitHub4
         const id = typeNum[nowType]
         state.current.blockInfo.push({
@@ -563,9 +572,6 @@ function App() {
       }
     }
     setGridList(grids)
-    console.log(list)
-    console.log(grids)
-    console.log(typeNum)
     // 计算边界
     const mainDOM = document.querySelector('.main')
     const body = document.body
