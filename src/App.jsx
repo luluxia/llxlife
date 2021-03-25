@@ -112,15 +112,15 @@ function Grain() {
 function Flag() {
   return (
     <div className="flag">
-      <img src="flag-left.svg" alt=""/>
-      <img src="flag-right.svg" alt=""/>
+      <img src="img/flag-left.svg" alt=""/>
+      <img src="img/flag-right.svg" alt=""/>
     </div>
   )
 }
 function Logo() {
   return (
     <>
-      <img src="logo.svg" alt=""/>
+      <img src="img/logo.svg" alt=""/>
       <p className="copyright">© 2021 Luluxia. All Rights Reserved. 萌ICP备 20201224号</p>
       {/* <p>{data.biliBangumi[0]['title']}</p> */}
     </>
@@ -262,7 +262,7 @@ function OSU(props) {
           <h2>{osuActicity[props.id - 4].title}</h2>
           <p>{dayjs(osuActicity[props.id - 4].time).fromNow()}取得 #{osuActicity[props.id - 4].rank}</p>
         </div>
-        <img className="rank" src={`osurank-${osuActicity[props.id - 4].scoreRank}.svg`} alt=""/>
+        <img className="rank" src={`img/osurank-${osuActicity[props.id - 4].scoreRank}.svg`} alt=""/>
       </div>
     </div>
     </>
@@ -605,7 +605,7 @@ function App() {
     <Grain/>
     <Flag/>
     <div className="home">
-      <img onClick={() => {returnCenter()}} src="home.svg" alt=""/>
+      <img onClick={() => {returnCenter()}} src="img/home.svg" alt=""/>
     </div>
     <div
       onMouseDown={e => {sliderDown(e)}}
@@ -631,7 +631,7 @@ function App() {
                 style={{gridArea: item}}
               >
                 { className == 'painting' &&
-                  <img src={`painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
+                  <img src={`img/painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
                 }
                 { className == 'pokemon' &&
                   <img src={`https://cn.portal-pokemon.com/play/resources/pokedex${data.pokemon[id]}`} alt=""/>
