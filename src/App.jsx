@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 import './App.sass'
-import apiData from './api/data.json'
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
 const Context = React.createContext({})
@@ -121,8 +120,8 @@ function Logo() {
   return (
     <>
       <img src="img/logo.svg" alt=""/>
-      <p className="copyright">© 2021 Luluxia. All Rights Reserved. 萌ICP备 20201224号</p>
-      {/* <p>{data.biliBangumi[0]['title']}</p> */}
+      <p></p>
+      <p className="copyright">© 2021 Luluxia. All Rights Reserved. <a href="https://icp.gov.moe" target="_blank">萌ICP备 </a><a href="https://icp.gov.moe/?keyword=20201224" target="_blank"> 20201224号</a></p>
     </>
   )
 }
@@ -346,7 +345,7 @@ function App() {
   })
   const blockRef = useRef([])
   const requestRef = useRef()
-  const [data, setData] = useState(apiData)
+  const [data, setData] = useState()
   // 按下鼠标
   function sliderDown(e) {
     state.current.mouseDown = 1
@@ -571,7 +570,12 @@ function App() {
         }
       }
     }
-    setGridList(grids)
+    fetch('api/data.json').then(res => {
+      return res.json()
+    }).then(data => {
+      setData(data)
+      setGridList(grids)
+    })
     // 计算边界
     const mainDOM = document.querySelector('.main')
     const body = document.body
@@ -629,6 +633,7 @@ function App() {
                 ref={e => {blockRef.current[index] = e}}
                 className={`${className ?? ''} block`}
                 style={{gridArea: item}}
+                key={index}
               >
                 { className == 'painting' &&
                   <img src={`img/painting${Math.floor(Math.random() * 6 + 1)}.png`} alt=""/>
