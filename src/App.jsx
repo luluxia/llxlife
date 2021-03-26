@@ -431,7 +431,7 @@ function App() {
       renderRun: 0
     }
     const dom = document.querySelector('.main')
-    dom.style.transition = 'transform 0.3s'
+    dom.style.transition = 'transform 0.6s'
     dom.style.transform = `translate3d(0px ,0px, 0px)`
     setTimeout(() => {
       dom.style.transition = 'none'
@@ -453,7 +453,7 @@ function App() {
           }, 50)
         }
       })
-    }, 300);
+    }, 600);
   }
   // 边界隐藏
   const hide = _.throttle(() => {
@@ -476,7 +476,7 @@ function App() {
   }, 500)
   useEffect(() => {
     // 初始化
-    const [height, width] = [24, 34]
+    const [height, width] = [20, 30]
     const grids = []
     const list = Array(height).fill(0).map(() => { return Array(width).fill(0) })
     const type = [
@@ -487,10 +487,10 @@ function App() {
     const typeNum = [0, 0, 0, 0, 0]
     // 第四个开始用于测试
     const defalutGrid = [
-      [[8, 12], [5, 5]],
-      [[10, 17], [2, 5]],
-      [[12, 17], [3, 5]],
-      [[13, 12], [1, 5]],
+      [[6, 10], [5, 5]],
+      [[8, 15], [2, 5]],
+      [[10, 15], [3, 5]],
+      [[11, 10], [1, 5]],
     ]
     let nowType = 0
     let finish = true

@@ -36,11 +36,12 @@ img
     max-width: 40vw
 .main
   display: grid
-  grid-template-columns: repeat(34, 5em)
-  grid-template-rows: repeat(24, 5em)
+  grid-template-columns: repeat(30, 5em)
+  grid-template-rows: repeat(20, 5em)
   grid-column-gap: 10px
   grid-row-gap: 10px
   will-change: transform
+  transition-timing-function: ease-out
 .block
   background-image: url('/img/pattern.png')
   user-select: none
@@ -57,8 +58,12 @@ img
   flex-direction: column
   overflow: hidden
   &:hover
-    transition: transform 0.3s
-    transform: scale(0.95)
+    animation: block 0.3s
+@keyframes block
+  0%
+    filter: brightness(1.1)
+  100%
+    filter: brightness(1)
 .title
   position: absolute
   top: 0.5em
@@ -114,6 +119,8 @@ img
   border: none
   background: none
   overflow: inherit
+  padding: 0.5em
+  opacity: 0.8
   img
     width: 100%
 .pokemon
