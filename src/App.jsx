@@ -576,14 +576,6 @@ function App() {
       setData(data)
       setGridList(grids)
     })
-    // 计算边界
-    const mainDOM = document.querySelector('.main')
-    const body = document.body
-    state.current.margin.x = - (body.clientWidth - mainDOM.clientWidth) / 2 + 20
-    state.current.margin.y = - (body.clientHeight - mainDOM.clientHeight) / 2 + 20
-
-    state.current.bodyRect.w = body.clientWidth
-    state.current.bodyRect.h = body.clientHeight
     // 激活拖拽
     requestRef.current = requestAnimationFrame(render)
     return () => cancelAnimationFrame(requestRef.current)
@@ -604,12 +596,22 @@ function App() {
       state.current.blockRects = blockRects
     }
   }, [gridList])
+  useEffect(() => {
+    // 计算边界
+    const mainDOM = document.querySelector('.main')
+    const body = document.body
+    state.current.margin.x = - (body.clientWidth - mainDOM.clientWidth) / 2 + 20
+    state.current.margin.y = - (body.clientHeight - mainDOM.clientHeight) / 2 + 20
+
+    state.current.bodyRect.w = body.clientWidth
+    state.current.bodyRect.h = body.clientHeight
+  })
   return (
     <>
     <Grain/>
     <Flag/>
-    <div className="home">
-      <img onClick={() => {returnCenter()}} src="img/home.svg" alt=""/>
+    <div onClick={() => {returnCenter()}} className="home">
+      <img src="img/home.svg" alt=""/>
     </div>
     <div
       onMouseDown={e => {sliderDown(e)}}
