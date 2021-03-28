@@ -118,20 +118,21 @@ function Flag() {
 }
 function Logo() {
   return (
-    <>
+    <div className="content">
       <img src="img/logo.svg" alt=""/>
-      <p></p>
       <p className="copyright">© 2021 Luluxia. All Rights Reserved. <a href="https://icp.gov.moe" target="_blank">萌ICP备 </a><a href="https://icp.gov.moe/?keyword=20201224" target="_blank"> 20201224号</a></p>
-    </>
+    </div>
   )
 }
 function Tip() {
   return (
-    <>
+    <div className="content">
       <p>向任意方向拖动屏幕进行浏览</p>
       <p>点击你感兴趣的内容吧</p>
-      <i className="iconfont icon-tuozhuai"></i>
-    </>
+      <div className="block-icon">
+        <i className="iconfont icon-tuozhuai"></i>
+      </div>
+    </div>
   )
 }
 function About() {
@@ -200,7 +201,9 @@ function NetEaseMusic(props) {
         </div>
       </div>
     </div>
-    <i className="iconfont icon-neteasemusic"></i>
+    <div className="block-icon">
+      <i className="iconfont icon-neteasemusic"></i>
+    </div>
     </>
   )
 }
@@ -221,7 +224,9 @@ function BilibiliAnime(props) {
         </div>
       </div>
     </div>
-    <i className="iconfont icon-bili"></i>
+    <div className="block-icon">
+      <i className="iconfont icon-bili"></i>
+    </div>
   </>
   )
 }
@@ -242,7 +247,9 @@ function BilibiliVideo(props) {
         </div>
       </div>
     </div>
-    <i className="iconfont icon-bili"></i>
+    <div className="block-icon">
+      <i className="iconfont icon-bili"></i>
+    </div>
   </>
   )
 }
@@ -284,7 +291,9 @@ function NintendoSwitchGame(props) {
         </div>
       </div>
     </div>
-    <i className="iconfont icon-switch"></i>
+    <div className="block-icon">
+      <i className="iconfont icon-switch"></i>
+    </div>
   </>
   )
 }
@@ -320,7 +329,9 @@ function Github(props) {
       }
       <p className="time">{dayjs(github[props.id].time).fromNow()}</p>
     </div>
-    <i className="iconfont icon-github"></i>
+    <div className="block-icon">
+      <i className="iconfont icon-github"></i>
+    </div>
     </>
   )
 }

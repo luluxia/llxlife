@@ -45,8 +45,8 @@ img
 .block
   background-image: url('/img/pattern.png')
   user-select: none
-  border: 5px solid
-  border-radius: 1em
+  // border: 5px solid
+  // border-radius: 1em
   border-color: transparent
   will-change: transform
   transition: transform 0.6s, opacity 0.6s
@@ -56,18 +56,42 @@ img
   justify-content: center
   align-items: center
   flex-direction: column
-  overflow: hidden
+  margin: 0.5em
+  // overflow: hidden
   &:hover
     animation: block 0.3s
+  &::after
+    content: ''
+    display: block
+    position: absolute
+    width: 4px
+    height: 4px
+    left: -4px
+    top: -4px
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    width: 4px
+    height: 4px
+    right: -4px
+    top: -4px
 @keyframes block
   0%
     filter: brightness(1.1)
   100%
     filter: brightness(1)
+.block-icon
+  position: absolute
+  width: 6em
+  height: calc(100% + 4px)
+  right: -4px
+  bottom: -4px
+  overflow: hidden
 .title
   position: absolute
   top: 0.5em
-  left: 0
+  left: -4px
   color: #fff
   font-size: 1.25em
   height: 1.5em
@@ -95,6 +119,22 @@ img
   padding-top: 3.5em
   width: 100%
   height: 100%
+  &::after
+    content: ''
+    display: block
+    position: absolute
+    width: 4px
+    height: 4px
+    left: -4px
+    bottom: -4px
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    width: 4px
+    height: 4px
+    right: -4px
+    bottom: -4px
 .hide
   opacity: 0
   transform: scale(0)
@@ -119,7 +159,6 @@ img
   border: none
   background: none
   overflow: inherit
-  padding: 0.5em
   opacity: 0.8
   img
     width: 100%
@@ -128,15 +167,32 @@ img
     width: 100%
     height: 100%
 // 内容块
+@mixin colors($c1, $c2)
+  box-shadow: 0 4px $c2, 4px 0 $c2, -4px 0 $c2, 0 -4px $c2, 0 4px rgb(255 255 255 / 80%), 4px 0 #fffdf1, -4px 0 #fffdf1, 0 -4px #fffdf1, 0 8px $c1, 8px 0 $c1, -8px 0 $c1, 0 -8px $c1, 0 12px $c2, 12px 0 $c2
+  background-color: $c2
+  color: $c1
+  &::after
+    background: $c1
+  &::before
+    background: $c1
+  .content::after
+    background: $c1
+  .content::before
+    background: $c1
+  .title
+    background: $c1
+    &::after
+      border-top: 0.75em solid $c1
+      border-bottom: 0.75em solid $c1
 // 内容块 - LOGO
 .logo
-  background-color: rgba(171, 205, 3, 0.1)
-  border-color: #ABCD03
-  box-shadow: 5px 5px rgba(171, 205, 3, 0.1)
+  @include colors(#ABCD03, rgba(171, 205, 3, 0.1))
   img
     width: 100%
   a
     color: inherit
+  .content
+    padding: 0
 .copyright
   font-size: 0.8em
   color: #ABCD03
@@ -145,14 +201,12 @@ img
   opacity: 0.8
 // 内容块 - 提示
 .tip
-  background-color: rgba(127, 96, 71, 0.1)
-  border-color: #7F6047
-  color: #7F6047
+  @include colors(#7F6047, rgba(127, 96, 71, 0.1))
   font-weight: bold
   letter-spacing: 0.1em
   line-height: 1.5em
-  box-shadow: 5px 5px rgba(127, 96, 71, 0.1)
-  overflow: hidden
+  .content
+    padding: 0
 .icon-tuozhuai
   position: absolute
   right: -0.5rem
@@ -162,32 +216,17 @@ img
   opacity: 0.2
 // 内容块 - 关于
 .about
-  background-color: rgba(233, 82, 142, 0.1)
-  border-color: #E9528E
-  box-shadow: 5px 5px rgba(233, 82, 142, 0.1)
-  .title
-    background: #E9528E
-    &::after
-      border-top: 0.75em solid #E9528E
-      border-bottom: 0.75em solid #E9528E
+  @include colors(#E9528E, rgba(233, 82, 142, 0.1))
   p
     line-height: 1.5em
     font-weight: bold
-    color: #E9528E
     letter-spacing: 0.1em
     text-indent: 2em
     margin: 0.25em 0
     text-align: justify
 // 内容块 - 链接
 .link
-  background-color: rgba(0, 166, 227, 0.1)
-  border-color: #00A5E3
-  box-shadow: 5px 5px rgba(0, 166, 227, 0.1)
-  .title
-    background: #00A5E3
-    &::after
-      border-top: 0.75em solid #00A5E3
-      border-bottom: 0.75em solid #00A5E3
+  @include colors(#00A5E3, rgba(0, 166, 227, 0.1))
   ul
     display: flex
     justify-content: space-between
@@ -229,16 +268,8 @@ img
       font-size: 1.5em
 // 内容块 - 网易云音乐
 .neteasemusic
-  color: #C20C0C
-  border-color: #C20C0C
-  background-color: rgba(194, 12, 12, 0.1)
-  box-shadow: 5px 5px rgba(194, 12, 12, 0.1)
+  @include colors(#C20C0C, rgba(194, 12, 12, 0.1))
   cursor: pointer
-  .title
-    background: #C20C0C
-    &::after
-      border-top: 0.75em solid #C20C0C
-      border-bottom: 0.75em solid #C20C0C
   .icon-neteasemusic
     position: absolute
     right: -1rem
@@ -276,16 +307,8 @@ img
   //   margin-top: 0.5em
 // 内容块 - 哔哩哔哩
 .bilibili-anime, .bilibili-video
-  color: #FB7299
-  border-color: #FB7299
-  background-color: rgba(251, 114, 153, 0.1)
-  box-shadow: 5px 5px rgba(251, 114, 153, 0.1)
+  @include colors(#FB7299, rgba(251, 114, 153, 0.1))
   cursor: pointer
-  .title
-    background: #FB7299
-    &::after
-      border-top: 0.75em solid #FB7299
-      border-bottom: 0.75em solid #FB7299
   .icon-bili
     position: absolute
     right: 0
@@ -329,16 +352,8 @@ img
     font-weight: bold
 // 内容块 - OSU
 .osu
-  color: #F462A3
-  border-color: #F462A3
-  background-color: rgba(244, 98, 164, 0.1)
-  box-shadow: 5px 5px rgba(244, 98, 164, 0.1)
+  @include colors(#F462A3, rgba(244, 98, 164, 0.1))
   cursor: pointer
-  .title
-    background: #F462A3
-    &::after
-      border-top: 0.75em solid #F462A3
-      border-bottom: 0.75em solid #F462A3
 .osu-map
   position: relative
   display: flex
@@ -361,15 +376,7 @@ img
   right: 1em
 // 内容块 - Github
 .github
-  color: #2D333B
-  border-color: #2D333B
-  background-color: rgba(45, 51, 59, 0.1)
-  box-shadow: 5px 5px rgba(45, 51, 59, 0.1)
-  .title
-    background: #2D333B
-    &::after
-      border-top: 0.75em solid #2D333B
-      border-bottom: 0.75em solid #2D333B
+  @include colors(#2D333B, rgba(45, 51, 59, 0.1))
   .content
     align-items: baseline
     word-break: break-all
@@ -395,17 +402,10 @@ img
     opacity: 0.2
 // 内容块 - Nintendo Switch
 .nintendo-switch-game
-  color: #E60012
-  border-color: #E60012
-  background-color: rgba(251, 114, 153, 0.1)
-  box-shadow: 5px 5px rgba(251, 114, 153, 0.1)
+  @include colors(#E60012, rgba(251, 114, 153, 0.1))
   cursor: pointer
   .title
-    background: #E60012
     letter-spacing: 0.1em
-    &::after
-      border-top: 0.75em solid #E60012
-      border-bottom: 0.75em solid #E60012
   .icon-switch
     position: absolute
     right: -1rem
