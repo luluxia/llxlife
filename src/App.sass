@@ -21,9 +21,11 @@ img
   display: flex
   justify-content: center
   align-items: center
-  width: 100vw
-  height: 100vh
+  width: 110vw
+  height: 110vh
   overflow: hidden
+  transition: transform 0.3s
+  transform: translate(-5vw, -5vh)
 .flag
   position: absolute
   width: 100vw
@@ -36,13 +38,14 @@ img
     max-width: 40vw
 .main
   display: grid
-  grid-template-columns: repeat(30, 5em)
-  grid-template-rows: repeat(20, 5em)
+  grid-template-columns: repeat(60, 5em)
+  grid-template-rows: repeat(36, 5em)
   grid-column-gap: 10px
   grid-row-gap: 10px
   will-change: transform
   transition-timing-function: ease-out
 .block
+  background: #eee
   background-image: url('/img/pattern.png')
   user-select: none
   // border: 5px solid
@@ -60,6 +63,7 @@ img
   // overflow: hidden
   &:hover
     animation: block 0.3s
+.block, .pixel-top
   &::after
     content: ''
     display: block
@@ -99,6 +103,10 @@ img
   padding-left: 1.5rem
   padding-right: 1.22rem
   letter-spacing: 0.2em
+  span
+    font-size: 1rem
+    margin-left: 0.5rem
+    opacity: 0.9
   &::after
     display: block
     content: ""
@@ -119,6 +127,7 @@ img
   padding-top: 3.5em
   width: 100%
   height: 100%
+.content, .pixel-bottom
   &::after
     content: ''
     display: block
@@ -171,14 +180,11 @@ img
   box-shadow: 0 4px $c2, 4px 0 $c2, -4px 0 $c2, 0 -4px $c2, 0 4px rgb(255 255 255 / 80%), 4px 0 #fffdf1, -4px 0 #fffdf1, 0 -4px #fffdf1, 0 8px $c1, 8px 0 $c1, -8px 0 $c1, 0 -8px $c1, 0 12px $c2, 12px 0 $c2
   background-color: $c2
   color: $c1
-  &::after
+  &::after, &::before
     background: $c1
-  &::before
-    background: $c1
-  .content::after
-    background: $c1
-  .content::before
-    background: $c1
+  .pixel-bottom, .content
+    &::after, &::before
+      background: $c1
   .title
     background: $c1
     &::after
@@ -193,6 +199,25 @@ img
     color: inherit
   .content
     padding: 0
+  .menu
+    position: absolute
+    margin-top: 10em
+    font-size: 0.9em
+    li
+      display: inline-block
+      font-weight: bold
+      margin: 0 0.2em
+      transition: color 0.3s, background 0.3s
+      &:hover
+        background: #abcd03
+        color: #fff
+      &::after, &::before
+        font-weight: normal
+        margin: 0 0.1em
+      &::after
+        content: "」"
+      &::before
+        content: "「"
 .copyright
   font-size: 0.8em
   color: #ABCD03
@@ -266,150 +291,443 @@ img
         color: #27A6D1
     i
       font-size: 1.5em
-// 内容块 - 网易云音乐
-.neteasemusic
-  @include colors(#C20C0C, rgba(194, 12, 12, 0.1))
-  cursor: pointer
-  .icon-neteasemusic
-    position: absolute
-    right: -1rem
-    bottom: -1rem
-    transform: rotate(15deg)
-    font-size: 5em
-    opacity: 0.2
-.music
+// // 内容块 - 网易云音乐
+// .neteasemusic
+//   @include colors(#C20C0C, rgba(194, 12, 12, 0.1))
+//   cursor: pointer
+//   .icon-neteasemusic
+//     position: absolute
+//     right: -1rem
+//     bottom: -1rem
+//     transform: rotate(15deg)
+//     font-size: 5em
+//     opacity: 0.2
+// .music
+//   display: flex
+//   justify-content: center
+//   align-items: center
+//   border-radius: 0.5em
+//   width: 100%
+//   img
+//     width: 5em
+//     border-radius: 5em
+//     margin-right: 0.5em
+//     border: 3px dashed
+//     padding: 0.2em
+//   .music-title, .music-tip
+//     text-overflow: ellipsis
+//     white-space: nowrap
+//     overflow: hidden
+//     width: 12rem
+//   .music-title
+//     font-size: 1.2em
+//     text-shadow: 2px 2px rgba(255, 255, 255, 0.8)
+//   .music-tip
+//     font-size: 0.8em
+//     font-weight: bold
+//     opacity: 0.5
+//   // .music-time
+//   //   font-weight: bold
+//   //   letter-spacing: 0.1em
+//   //   margin-top: 0.5em
+// // 内容块 - 哔哩哔哩
+// .bilibili-anime, .bilibili-video
+//   @include colors(#FB7299, rgba(251, 114, 153, 0.1))
+//   cursor: pointer
+//   .icon-bili
+//     position: absolute
+//     right: 0
+//     bottom: -1rem
+//     transform: rotate(-6deg)
+//     font-size: 5em
+//     opacity: 0.2
+// .bilibili-anime-content, .nintendo-switch-content
+//   display: flex
+//   flex-direction: row
+//   align-items: center
+//   img
+//     height: 10em
+//     border: 3px dashed
+//     padding: 0.2em
+//     margin-right: 1em
+//     border-radius: 1em
+//   h2
+//     font-size: 1.25em
+//     text-shadow: 4px 4px rgba(255, 255, 255, 0.8)
+//   .big-title
+//     font-size: 2em
+//   p
+//     font-weight: bold
+//     letter-spacing: 0.1em
+//     margin-top: 2em
+// .bilibili-video-content
+//   img
+//     width: 100%
+//     border: 3px dashed
+//     padding: 0.2em
+//     border-radius: 1em
+//   .bilibili-info, p
+//     margin-top: 0.5em
+//   h2, p
+//     letter-spacing: 0.1em
+//   h2
+//     font-size: 1em
+//     font-weight: normal
+//   p
+//     font-weight: bold
+// // 内容块 - OSU
+// .osu
+//   @include colors(#F462A3, rgba(244, 98, 164, 0.1))
+//   cursor: pointer
+// .osu-map
+//   position: relative
+//   display: flex
+//   align-items: center
+//   border-radius: 0.5em
+//   border: 3px dashed
+//   padding: 0.2em
+// .osu-pic
+//   width: 100%
+//   border-radius: 0.3em
+//   filter: brightness(0.8)
+// .record-info
+//   position: absolute
+//   color: #fff
+//   font-size: 0.6em
+//   padding-left: 1em
+//   text-shadow: 1px 1px rgba(0, 0, 0, 0.4)
+// .rank
+//   position: absolute
+//   right: 1em
+// // 内容块 - Github
+// .github
+//   @include colors(#2D333B, rgba(45, 51, 59, 0.1))
+//   .content
+//     align-items: baseline
+//     word-break: break-all
+//   h2
+//     font-size: 1.2em
+//   .github-info
+//     font-size: 0.8em
+//     margin-top: 0.5em
+//   .github-link
+//     text-decoration: underline
+//     cursor: pointer
+//   .time
+//     font-weight: bold
+//     letter-spacing: 0.1em
+//     font-size: 1em
+//     margin-top: 1em
+//   .icon-github
+//     position: absolute
+//     right: -0.6rem
+//     bottom: -0.6rem
+//     transform: rotate(15deg)
+//     font-size: 5em
+//     opacity: 0.2
+// // 内容块 - Nintendo Switch
+// .nintendo-switch-game
+//   @include colors(#E60012, rgba(251, 114, 153, 0.1))
+//   cursor: pointer
+//   .title
+//     letter-spacing: 0.1em
+//   .icon-switch
+//     position: absolute
+//     right: -1rem
+//     bottom: -1.5rem
+//     transform: rotate(-6deg)
+//     font-size: 6em
+//     opacity: 0.2
+.move
+  transform: scale(0.95) translate(-5vw, -5vh)
+  transition-delay: 0.1s
+// 友情链接
+// .friend
+//   @include colors(#00A5E3, rgba(0, 166, 227, 0.1))
+//   .friend-list
+//     display: flex
+//     flex-wrap: wrap
+//     justify-content: center
+//   .friend-item
+//     list-style: none
+//     display: flex
+//     align-items: center
+//     box-shadow: 4px 4px rgb(255 255 255 / 80%), 4px 4px rgb(255 255 255 / 80%) inset
+//     padding: 0.2em
+//     border-radius: 2em
+//     border: 3px dashed
+//     margin: 0.5em
+//     img
+//       width: 2em
+//       height: 2em
+//       object-fit: cover
+//       border-radius: 50%
+//     p
+//       margin: 0 1em
+//       font-weight: bold
+//       letter-spacing: 0.1em
+// .folder
+//   @include colors(#00A5E3, rgba(0, 166, 227, 0.1))
+//   .folder-item
+//     display: inline-block
+//     list-style: none
+//     width: 6em
+//     text-align: center
+//     padding: 0.5em
+//     border-radius: 6px
+//     &:hover
+//       background: rgb(255 255 255 / 60%)
+//     img
+//       width: 100%
+//     p
+//       font-size: 0.9em
+//       color: #fff
+//       text-shadow: 0 0 3px #000
+// 通用卡片
+.card
+  .content
+    padding: 0
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    border-radius: 6px
+.skew-title
+  h2, p
+    color: #fff
+    font-weight: bold
+    text-shadow: 2px 2px 0px rgb(0 0 0 / 30%)
+    transform: skew(-6deg, -2deg)
+  h2
+    font-size: 2em
+    letter-spacing: 6px
+  p
+    font-size: 0.8em
+    letter-spacing: 2px
+// 配色方案
+.osu
+  @include colors(#F462A3, rgba(244, 98, 164, 0.1))
+// // 内容页
+// .cover
+//   position: absolute
+//   top: 0
+//   bottom: 0
+//   left: 0
+//   right: 0
+//   background: #fff
+//   opacity: 0
+//   pointer-events: none
+//   transition: opacity 0.5s
+//   z-index: 1
+// .halftone-box
+//   filter: contrast(1000%)
+//   display: flex
+//   justify-content: center
+//   align-items: center
+//   &::after
+//     content: ''
+//     position: absolute
+//     // top: -100%
+//     // left: -100%
+//     // right: -100%
+//     // bottom: -100%
+//     min-width: 65em
+//     height: 130vh
+//     background-blend-mode: multiply
+//     background: radial-gradient(8px 8px, black, white)
+//     background-size: 10px 10px
+//     mix-blend-mode: screen
+//     transform: rotate(11.25deg)
+//     z-index: 1
+// .halftone
+//   display: block
+//   min-width: 55em
+//   height: 130vh
+//   background: #00ffff
+//   filter: brightness(1) blur(50px)
+// .cover-active
+//   opacity: 0.6
+// .box
+//   position: absolute
+//   width: 424px
+//   height: 244px
+//   z-index: 1
+//   opacity: 0
+//   pointer-events: none
+// .box-active
+//   transform: translate(0, 0) rotateY(180deg) !important
+//   opacity: 1
+//   width: 100%
+//   height: 100%
+//   pointer-events: all
+//   .box-content
+//     opacity: 1
+// // 内容页内部
+// .box-content
+//   transform: rotateY(180deg)
+//   max-width: 45em
+//   height: calc(100% - 2em)
+//   margin: 1em auto
+//   padding: 1em
+//   opacity: 0
+//   transition: opacity 1.5s
+// .box-page
+//   height: 100%
+//   overflow: auto
+//   &::-webkit-scrollbar
+//     width: 10px
+//     background-color: rgb(0 0 0 / 5%)
+//     -webkit-border-radius: 100px
+//   &::-webkit-scrollbar-thumb
+//     background: rgb(0 0 0 / 50%)
+//     -webkit-border-radius: 100px
+//     background-clip: padding-box
+//     border: 2px solid rgb(255 255 255 / 0%)
+//     min-height: 10px
+// .article
+//   p
+//     margin: 2em 0
+//     line-height: 2.2
+//     font-weight: 600
+//     letter-spacing: .075em
+.cover
+  pointer-events: none
+  position: absolute
+  display: flex
+  justify-content: flex-end
+  // justify-content: center
+  // align-items: center
+  width: 100vw
+  height: 100vh
+  z-index: 1
+  overflow-y: scroll
+  &::-webkit-scrollbar
+    width: 10px
+    background-color: rgb(255 255 255 / 70%)
+    background-color: rgb(255 255 255 / 0%)
+  &::-webkit-scrollbar-thumb
+    background: rgb(0 0 0 / 50%)
+    -webkit-border-radius: 100px
+    background-clip: padding-box
+    border: 2px solid rgb(255 255 255 / 0%)
+    min-height: 10px
+.cover-halftone
+  position: fixed
+  width: 100vw
+  height: 100vh
+  // top: 1em
+  // bottom: 0
+  // left: 0
+  // right: 0
+  background: #fff
+  overflow: hidden
+  filter: contrast(1000%)
   display: flex
   justify-content: center
   align-items: center
-  border-radius: 0.5em
-  width: 100%
-  img
-    width: 5em
-    border-radius: 5em
-    margin-right: 0.5em
-    border: 3px dashed
-    padding: 0.2em
-  .music-title, .music-tip
-    text-overflow: ellipsis
-    white-space: nowrap
-    overflow: hidden
-    width: 12rem
-  .music-title
-    font-size: 1.2em
-    text-shadow: 2px 2px rgba(255, 255, 255, 0.8)
-  .music-tip
-    font-size: 0.8em
-    font-weight: bold
-    opacity: 0.5
-  // .music-time
-  //   font-weight: bold
-  //   letter-spacing: 0.1em
-  //   margin-top: 0.5em
-// 内容块 - 哔哩哔哩
-.bilibili-anime, .bilibili-video
-  @include colors(#FB7299, rgba(251, 114, 153, 0.1))
-  cursor: pointer
-  .icon-bili
+  opacity: 0
+  transition: opacity 0.3s
+  &::after
+    content: ''
     position: absolute
-    right: 0
-    bottom: -1rem
-    transform: rotate(-6deg)
-    font-size: 5em
-    opacity: 0.2
-.bilibili-anime-content, .nintendo-switch-content
+    width: 150%
+    height: 150%
+    background-blend-mode: multiply
+    background: radial-gradient(8px 8px, black, white)
+    background-size: 10px 10px
+    mix-blend-mode: screen
+    transform: rotate(11.25deg)
+    z-index: 1
+.cover-halftone-color
+  display: block
+  width: 800px
+  height: 400px
+  background: #fff
+  filter: brightness(1) blur(50px)
+  transition: background 0.6s
+.box-cover
+  position: absolute
+  // top: 0
+  // bottom: 0
+  // left: 0
+  // right: 0
   display: flex
-  flex-direction: row
+  justify-content: center
   align-items: center
-  img
-    height: 10em
-    border: 3px dashed
-    padding: 0.2em
-    margin-right: 1em
-    border-radius: 1em
-  h2
-    font-size: 1.25em
-    text-shadow: 4px 4px rgba(255, 255, 255, 0.8)
-  .big-title
-    font-size: 2em
-  p
-    font-weight: bold
-    letter-spacing: 0.1em
-    margin-top: 2em
-.bilibili-video-content
-  img
-    width: 100%
-    border: 3px dashed
-    padding: 0.2em
-    border-radius: 1em
-  .bilibili-info, p
-    margin-top: 0.5em
-  h2, p
-    letter-spacing: 0.1em
-  h2
-    font-size: 1em
-    font-weight: normal
-  p
-    font-weight: bold
-// 内容块 - OSU
-.osu
-  @include colors(#F462A3, rgba(244, 98, 164, 0.1))
-  cursor: pointer
-.osu-map
+  min-height: 100vh
+  width: 100vw
+  padding: 1em 0
+  overflow: auto
+  transform: scale(0)
+  opacity: 0
+  transition: transform 0.3s, opacity 0.3s
+.box
+  @include colors(#555, rgb(255 255 255 / 95%))
   position: relative
+  width: 45em
+.box-content
+  height: 100%
+  padding: 1em
+.box-title
+  margin-bottom: 0.25em
+  margin-left: 0.25rem
+
+// 激活状态
+.cover-active
+  pointer-events: all
+  &::-webkit-scrollbar
+    background-color: rgb(255 255 255 / 70%)
+  .box-cover
+    transform: scale(1)
+    opacity: 1
+  .cover-halftone-color
+    background: #00ffff
+  .cover-halftone
+    opacity: 0.7
+  .hide-box
+    // position: fixed
+    transform: translate(0, 1em) !important
+    opacity: 0 !important
+    pointer-events: none
+
+// 内容页分类型
+// .box-pic
+//   align-items: center
+//   img
+//     max-height: calc(100vh - 8em)
+//     border-radius: 6px
+//   .box
+//     max-height: 100%
+//   .box-content
+//     max-height: calc(100vh - 8em)
+// .box-article
+//   .box
+//     max-width: 45em
+//     width: 45em
+//     height: fit-content
+
+// 博文列表
+.article-list
   display: flex
-  align-items: center
-  border-radius: 0.5em
-  border: 3px dashed
-  padding: 0.2em
-.osu-pic
-  width: 100%
-  border-radius: 0.3em
-  filter: brightness(0.8)
-.record-info
-  position: absolute
+  flex-wrap: wrap
+.article-item
+  background: #fff
+  border: 2px solid
+  padding: 0.5em
+  box-shadow: 3px 3px rgb(0 0 0 / 9%)
+  border-radius: 0.2em
+  width: calc( 50% - 0.5em )
+  margin: 0.25em
+.article-time
+  font-size: 0.9em
+  color: #888
+.article-title
+  font-size: 1.1em
+  margin-bottom: 0.2em
+.article-tag
+  background: #E9528E
   color: #fff
-  font-size: 0.6em
-  padding-left: 1em
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.4)
-.rank
-  position: absolute
-  right: 1em
-// 内容块 - Github
-.github
-  @include colors(#2D333B, rgba(45, 51, 59, 0.1))
-  .content
-    align-items: baseline
-    word-break: break-all
-  h2
-    font-size: 1.2em
-  .github-info
-    font-size: 0.8em
-    margin-top: 0.5em
-  .github-link
-    text-decoration: underline
-    cursor: pointer
-  .time
-    font-weight: bold
-    letter-spacing: 0.1em
-    font-size: 1em
-    margin-top: 1em
-  .icon-github
-    position: absolute
-    right: -0.6rem
-    bottom: -0.6rem
-    transform: rotate(15deg)
-    font-size: 5em
-    opacity: 0.2
-// 内容块 - Nintendo Switch
-.nintendo-switch-game
-  @include colors(#E60012, rgba(251, 114, 153, 0.1))
-  cursor: pointer
-  .title
-    letter-spacing: 0.1em
-  .icon-switch
-    position: absolute
-    right: -1rem
-    bottom: -1.5rem
-    transform: rotate(-6deg)
-    font-size: 6em
-    opacity: 0.2
+  font-size: 0.8em
+  width: fit-content
+  padding: 0.2em 0.5em
+  border-radius: 0.2em
