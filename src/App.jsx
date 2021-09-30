@@ -5,6 +5,8 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 import './App.sass'
+import { pokemon } from './pokemon.json'
+import { Route, Switch, useHistory, withRouter, useLocation } from 'react-router-dom'
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
 const Context = React.createContext({})
@@ -93,12 +95,28 @@ function Link() {
 function Card(props) {
   return (
     <>
-    <h1 className="title">博文<span>作品诞生记</span></h1>
+    <img src={props.data?.img} referrerPolicy="no-referrer" alt="" />
+    <div className="card-cover"></div>
+    <h1 className="title">{props.data?.type}<span>{props.data?.subType}</span></h1>
     <div className="content skew-title">
-      <h2>关于陆陆侠的生活</h2>
-      <p>2021/7/30</p>
+      <h2 style={{fontSize: props.data?.title.length >= 10 && '1.5em'}}>{props.data?.title}</h2>
+      <p>{props.data?.subTitle}</p>
     </div>
-    <img src="img/test.jpg" alt="" />
+    </>
+  )
+}
+function RandomArt() {
+  const [random, setRandom] = useState(0)
+  useEffect(() => {
+    setRandom(Math.floor(Math.random() * 1081))
+  }, [])
+  return (
+    <>
+    <div>
+      {
+        random && <img src={'https://cn.portal-pokemon.com/play/resources/pokedex' + pokemon[random]} alt="" />
+      }
+    </div>
     </>
   )
 }
@@ -113,12 +131,14 @@ function Box(props) {
   const boxRef = useRef()
   const subBoxRef = useRef()
   const coverRef = useRef()
+  const history = useHistory()
   // 关闭盒子
   function closeBox() {
     setBoxState({
       ...boxState,
       active: 0
     })
+    history.push('/')
   }
   // 打开二级
   function openSub() {
@@ -238,7 +258,7 @@ function App() {
       { class: 'link' },
       { class: 'about' },
       { class: 'tip' },
-      { class: 'card osu' }
+      // { class: 'card osu' }
     ],
     blockRects: []
   })
@@ -246,6 +266,8 @@ function App() {
   const requestRef = useRef()
   const appRef = useRef()
   const [data, setData] = useState()
+  const history = useHistory()
+  const location = useLocation()
   // 按下鼠标
   function sliderDown(e) {
     state.current.mouseDown = 1
@@ -358,14 +380,24 @@ function App() {
     }, 600);
   }
   // 卡片点击事件
-  function openCard(e) {
-    state.current.change.x + state.current.change.y || 
-    setBoxState({
-      ...boxState,
-      active: 1,
-      x: e.currentTarget.getClientRects()[0].x + e.currentTarget.clientWidth / 2,
-      y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2,
-    })
+  function openCard(e, url) {
+    // state.current.change.x + state.current.change.y || 
+    if (!(state.current.change.x + state.current.change.y)) {
+      console.log(history)
+      if (url) {
+        if (!url.indexOf('/')) {
+          history.push(url)
+          setBoxState({
+            ...boxState,
+            active: 1,
+            x: e.currentTarget.getClientRects()[0].x + e.currentTarget.clientWidth / 2,
+            y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2,
+          })
+        } else {
+          window.open(url)
+        }
+      }
+    }
   }
   // 边界隐藏
   const hide = _.throttle(() => {
@@ -386,8 +418,8 @@ function App() {
       }
     })
   }, 500)
+  // 初始化
   useEffect(() => {
-    // 初始化
     const [height, width] = [36, 60]
     const grids = []
     const list = Array(height).fill(0).map(() => { return Array(width).fill(0) })
@@ -397,7 +429,7 @@ function App() {
       [[15, 30], [2, 5]],
       [[17, 30], [3, 5]],
       [[20, 25], [1, 10]],
-      [[15, 35], [3, 5]]
+      // [[15, 35], [3, 5]]
     ]
     // 完成默认点
     defalutGrid.forEach(item => {
@@ -409,39 +441,84 @@ function App() {
       }
       grids.push([`${x + 1} / ${y + 1} / ${x + 1 + h} / ${y + 1 + w}`])
     })
-    for (let x = 0; x < height; x+=3) {
-      for (let y = 0; y < width; y+=5) {
-        // 610 615 910 915
-        // 排除默认
-        if (!['1525', '1530', '1825', '1830', '1535'].includes(`${x}${y}`)) {
-          grids.push([`${x + 1} / ${y + 1} / ${x + 4} / ${y + 6}`])
-          state.current.blockInfo.push({ class: '' })
+    console.log(list)
+    // 获取数据
+    fetch("http://localhost:7001/api/get")
+      .then(response => response.json())
+      .then(result => {
+        let i = 0
+        for (let x = 0; x < height; x+=3) {
+          for (let y = 0; y < width; y+=5) {
+            // 排除默认
+            let check = 1
+            for (let i = x; i < x + 3; i++) {
+              for (let j = y; j < y + 5; j++) {
+                if (list[i] && list[i][j]) {
+                  check = 0
+                }
+              }
+            }
+            if (check) {
+              grids.push([`${x + 1} / ${y + 1} / ${x + 4} / ${y + 6}`])
+              for (let i = x; i < x + 3; i++) {
+                for (let j = y; j < y + 5; j++) {
+                  if (list[i]) {
+                    list[i][j] = 1
+                  }
+                }
+              }
+              // 添加数据
+              if ((x == 0 || list[x-3] && list[x-3][y]) && Math.floor(Math.random() * 3) == 0) {
+                state.current.blockInfo.push({ class: 'random-art' })
+              } else {
+                const apiType = ['哔哩哔哩', 'OSU', 'Nintendo Switch', '网易云音乐', '博文', '相册', 'PlayStation']
+                const apiClass = ['bilibili', 'osu', 'switch', 'music', 'article-color', 'photo-color', 'psn']
+                let cardClass = 'card '
+                if (result[i]?.type) {
+                  cardClass += apiClass[apiType.indexOf(result[i]?.type)]
+                }
+                state.current.blockInfo.push({ class: cardClass, data: result[i] })
+                i++
+              }
+            }
+          }
         }
-      }
-    }
-    setGridList(grids)
-    // 激活拖拽
-    requestRef.current = requestAnimationFrame(render)
-    return () => cancelAnimationFrame(requestRef.current)
+        setGridList(grids)
+        // 激活拖拽
+        requestRef.current = requestAnimationFrame(render)
+        return () => cancelAnimationFrame(requestRef.current)
+      })
   }, [])
+  // 恢复隐藏（打开动画）
+  useEffect(() => {
+    setTimeout(() => {
+      if (gridList != '') {
+        blockRef.current.forEach(dom => {
+          dom.classList.remove('hide')
+        })
+      }
+    }, 200)
+  }, [gridList])
   // 记录方块边界
   useEffect(() => {
-    if (gridList != '') {
-      const blockRects = []
-      blockRef.current.forEach(dom => {
-        const rect = dom.getClientRects()[0]
-        blockRects.push({
-          top: rect.top,
-          left: rect.left,
-          right: rect.right,
-          height: rect.height
+    setTimeout(() => {
+      if (gridList != '') {
+        const blockRects = []
+        blockRef.current.forEach(dom => {
+          const rect = dom.getClientRects()[0]
+          blockRects.push({
+            top: rect.top,
+            left: rect.left,
+            right: rect.right,
+            height: rect.height
+          })
         })
-      })
-      state.current.blockRects = blockRects
-    }
+        state.current.blockRects = blockRects
+      }
+    }, 1000)
   }, [gridList])
+  // 计算边界
   useEffect(() => {
-    // 计算边界
     const mainDOM = document.querySelector('.main')
     const body = document.body
     state.current.margin.x = - (body.clientWidth - mainDOM.clientWidth) / 2 + 20
@@ -449,7 +526,7 @@ function App() {
 
     state.current.bodyRect.w = body.clientWidth
     state.current.bodyRect.h = body.clientHeight
-    hide()
+    // hide()
   })
   return (
     <>
@@ -459,6 +536,9 @@ function App() {
       <div onClick={() => {returnCenter()}} className="home">
         <img src="img/home.svg" alt=""/>
       </div>
+      {/* <Switch>
+        <Route path="/test" component={Box} />
+      </Switch> */}
       <Box/>
       <div
         onMouseDown={e => {sliderDown(e)}}
@@ -476,20 +556,22 @@ function App() {
           {
             gridList.map((item, index) => {
               const className = state.current.blockInfo[index].class
-              const id = state.current.blockInfo[index].id
+              const data = state.current.blockInfo[index]?.data
+              const url = state.current.blockInfo[index]?.data?.link
               return (
                 <div
                   ref={e => {blockRef.current[index] = e}}
-                  className={`${className ?? ''} block`}
+                  className={`${className ?? ''} block hide`}
                   style={{gridArea: item, transitionDelay: `${Math.floor(Math.random()*(200+1))}ms`}}
                   key={index}
-                  onClick={e => {openCard(e)}}
+                  onClick={e => {openCard(e, url)}}
                 >
                   { className == 'logo' && <Logo/> }
                   { className == 'about' && <About/> }
                   { className == 'link' && <Link/> }
                   { className == 'tip' && <Tip/> }
-                  { className.slice(0, 4) == 'card' && <Card/> }
+                  { className.slice(0, 4) == 'card' && <Card data={data}/> }
+                  { className == 'random-art' && <RandomArt/> }
                 </div>
               )
             })
@@ -501,4 +583,4 @@ function App() {
   )
 }
 
-export default App
+export default withRouter(App)
