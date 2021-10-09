@@ -1,64 +1,19 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
 import Grain from './card/Grain'
+import Flag from './card/Flag'
+import Logo from './card/Logo'
+import Tip from './card/Tip'
+import About from './card/About'
+
+import ArticleList from './box/ArticleList'
+import PhotoList from './box/PhotoList'
+
 import _ from 'lodash'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import 'dayjs/locale/zh-cn'
 import './App.sass'
 import { pokemon } from './pokemon.json'
 import { Route, Switch, useHistory, withRouter, useLocation } from 'react-router-dom'
-dayjs.locale('zh-cn')
-dayjs.extend(relativeTime)
+
 const Context = React.createContext({})
-function Flag() {
-  return (
-    <div className="flag">
-      <img src="img/flag-left.svg" alt=""/>
-      <img src="img/flag-right.svg" alt=""/>
-    </div>
-  )
-}
-function Logo() {
-  return (
-    <div className="content">
-      <img src="img/logo.svg" alt=""/>
-      <ul className="menu">
-        <li>博文</li>
-        <li>相册</li>
-        <li>作品</li>
-        <li>友链</li>
-      </ul>
-      <p className="copyright">© 2021 Luluxia. All Rights Reserved. <a href="https://icp.gov.moe" target="_blank">萌ICP备 </a><a href="https://icp.gov.moe/?keyword=20201224" target="_blank"> 20201224号</a></p>
-    </div>
-  )
-}
-function Tip() {
-  return (
-    <div className="content">
-      <p>向任意方向拖动屏幕进行浏览</p>
-      <p>点击你感兴趣的内容吧</p>
-      <div className="block-icon">
-        <i className="iconfont icon-tuozhuai"></i>
-      </div>
-    </div>
-  )
-}
-function About() {
-  return (
-    <>
-      <h1 className="title">关于</h1>
-      <div className="content">
-        <p>
-          氦！欢迎光临~！我是陆陆侠，一位默默无闻的前端工程师。爱好前端、设计、音游、二次元。
-        </p>
-        <p>
-          这里是我的个人站点——陆陆侠的生活，
-          你可以在这里看到我的一些日常动态，包括并不限于我最近追的番、听的歌、玩的游戏等等……尽情探索吧！
-        </p>
-      </div>
-    </>
-  )
-}
 function Link() {
   const { state } = useContext(Context)
   const links = [
@@ -138,7 +93,9 @@ function Box(props) {
       ...boxState,
       active: 0
     })
-    history.push('/')
+    setTimeout(() => {
+      history.push('/')
+    }, 300);
   }
   // 打开二级
   function openSub() {
@@ -197,24 +154,14 @@ function Box(props) {
       >
         <div onClick={e => {e.stopPropagation()}} ref={e => {boxRef.current = e}} className="box pixel-top">
           <div className="box-content pixel-bottom">
-            <h1 className="box-title">博文</h1>
-            <div onClick={() => {openSub()}} className="article-list">
-              <div className="article-item">
-                <p className="article-time">2021-8-8</p>
-                <p className="article-title">关于陆陆侠的生活</p>
-                <p className="article-tag">作品诞生记</p>
-              </div>
-              <div className="article-item">
-                <p className="article-time">2021-8-8</p>
-                <p className="article-title">关于陆陆侠的生活</p>
-                <p className="article-tag">作品诞生记</p>
-              </div>
-              <div className="article-item">
-                <p className="article-time">2021-8-8</p>
-                <p className="article-title">关于陆陆侠的生活</p>
-                <p className="article-tag">作品诞生记</p>
-              </div>
-            </div>
+            <Switch>
+              <Route path="/article">
+                <ArticleList openSub={openSub} />
+              </Route>
+              <Route path="/photo">
+                <PhotoList openSub={openSub} />
+              </Route>
+            </Switch>
           </div>
         </div>
       </div>
@@ -257,8 +204,7 @@ function App() {
       { class: 'logo' },
       { class: 'link' },
       { class: 'about' },
-      { class: 'tip' },
-      // { class: 'card osu' }
+      { class: 'tip' }
     ],
     blockRects: []
   })
@@ -381,9 +327,7 @@ function App() {
   }
   // 卡片点击事件
   function openCard(e, url) {
-    // state.current.change.x + state.current.change.y || 
     if (!(state.current.change.x + state.current.change.y)) {
-      console.log(history)
       if (url) {
         if (!url.indexOf('/')) {
           history.push(url)
@@ -441,7 +385,6 @@ function App() {
       }
       grids.push([`${x + 1} / ${y + 1} / ${x + 1 + h} / ${y + 1 + w}`])
     })
-    console.log(list)
     // 获取数据
     fetch("http://localhost:7001/api/get")
       .then(response => response.json())
@@ -489,6 +432,22 @@ function App() {
         return () => cancelAnimationFrame(requestRef.current)
       })
   }, [])
+  // 监听URL
+  useEffect(() => {
+    if (location.pathname != '/') {
+      setBoxState({
+        ...boxState,
+        active: 1,
+        // x: e.currentTarget.getClientRects()[0].x + e.currentTarget.clientWidth / 2,
+        // y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2,
+      })
+    } else {
+      setBoxState({
+        ...boxState,
+        active: 0
+      })
+    }
+  }, [location])
   // 恢复隐藏（打开动画）
   useEffect(() => {
     setTimeout(() => {
@@ -534,11 +493,8 @@ function App() {
       <Grain/>
       <Flag/>
       <div onClick={() => {returnCenter()}} className="home">
-        <img src="img/home.svg" alt=""/>
+        <img src="../img/home.svg" alt=""/>
       </div>
-      {/* <Switch>
-        <Route path="/test" component={Box} />
-      </Switch> */}
       <Box/>
       <div
         onMouseDown={e => {sliderDown(e)}}
@@ -566,7 +522,7 @@ function App() {
                   key={index}
                   onClick={e => {openCard(e, url)}}
                 >
-                  { className == 'logo' && <Logo/> }
+                  { className == 'logo' && <Logo openCard={openCard}/> }
                   { className == 'about' && <About/> }
                   { className == 'link' && <Link/> }
                   { className == 'tip' && <Tip/> }
