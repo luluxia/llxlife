@@ -6,6 +6,7 @@ import Tip from './card/Tip'
 import About from './card/About'
 
 import ArticleList from './box/ArticleList'
+import Article from './box/Article'
 import PhotoList from './box/PhotoList'
 
 import _ from 'lodash'
@@ -79,9 +80,7 @@ function Box(props) {
   const { boxState, setBoxState } = useContext(Context)
   const [data, setData] = useState({
     width: 0,
-    height: 0,
-    sub: 0,
-    scroll: 0
+    height: 0
   })
   const boxRef = useRef()
   const subBoxRef = useRef()
@@ -106,7 +105,8 @@ function Box(props) {
     setBoxState({
       ...boxState,
       sub: 1,
-      scroll: coverRef.current.scrollTop
+      scroll: coverRef.current.scrollTop,
+      needCloseSub: 1
     })
     // 锁定一级，使其不跟随滚动条移动
     boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
@@ -116,20 +116,27 @@ function Box(props) {
   }
   // 关闭二级
   function closeSub() {
-    // 隐藏二级显示一级
-    setBoxState({
-      ...boxState,
-      sub: 0
-    })
-    // 锁定二级，使其不跟随滚动条移动
-    subBoxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
-    subBoxRef.current.parentNode.style.position = 'fixed'
-    // 还原一级状态
-    setTimeout(() => {
-      boxRef.current.parentNode.style.top = 'inherit'
-      boxRef.current.parentNode.style.position = 'absolute'
-      coverRef.current.scrollTop = boxState.scroll
-    }, 300)
+    console.log(boxState.needCloseSub)
+    if (!boxState.needCloseSub) {
+      closeBox()
+    } else {
+      // 隐藏二级显示一级
+      setBoxState({
+        ...boxState,
+        sub: 0,
+        needCloseSub: 0
+      })
+      // 锁定二级，使其不跟随滚动条移动
+      subBoxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
+      subBoxRef.current.parentNode.style.position = 'fixed'
+      // 还原一级状态
+      setTimeout(() => {
+        boxRef.current.parentNode.style.top = 'inherit'
+        boxRef.current.parentNode.style.position = 'absolute'
+        coverRef.current.scrollTop = boxState.scroll
+        history.goBack()
+      }, 300)
+    }
   }
   // 打开盒子
   useEffect(() => {
@@ -168,14 +175,15 @@ function Box(props) {
       <div
         onClick={() => {closeSub()}}
         className={`box-cover box-article ${!boxState.sub ? 'hide-box' : ''}`}
-        style={{position: 'fixed'}}
+        style={{position: 'fixed', transformOrigin: `${boxState.x}px ${boxState.y}px`}}
       >
         <div onClick={e => {e.stopPropagation()}} ref={e => {subBoxRef.current = e}} className="box pixel-top">
           <div className="box-content pixel-bottom">
-            <p>这里是二级区域</p>.
-            <p>这里是二级区域</p>
-            <p>这里是二级区域</p>
-            <p>这里是二级区域</p>
+            <Switch>
+              <Route path="/article/:id">
+                <Article />
+              </Route>
+            </Switch>
           </div>
         </div>
       </div>
@@ -185,12 +193,7 @@ function Box(props) {
 }
 function App() {
   const [gridList, setGridList] = useState([])
-  const [boxState, setBoxState] = useState({
-    active: 0,
-    anime: 0,
-    x: 0,
-    y: 0
-  })
+  const [boxState, setBoxState] = useState({})
   const state = useRef({
     renderRun: 1,
     mouseDown: 0,
@@ -434,12 +437,20 @@ function App() {
   }, [])
   // 监听URL
   useEffect(() => {
-    if (location.pathname != '/') {
+    const num = location.pathname.split('/').length
+    if (location.pathname != '/' && num == 2) {
       setBoxState({
         ...boxState,
         active: 1,
+        sub: 0
         // x: e.currentTarget.getClientRects()[0].x + e.currentTarget.clientWidth / 2,
         // y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2,
+      })
+    } else if (num == 3) {
+      setBoxState({
+        ...boxState,
+        active: 1,
+        sub: 1
       })
     } else {
       setBoxState({

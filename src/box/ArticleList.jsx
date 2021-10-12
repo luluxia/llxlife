@@ -1,34 +1,55 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useQuery, gql } from "@apollo/client"
+import { useHistory } from "react-router"
 function ArticleList(props) {
-  const { data } = useQuery(gql`
-    query MyQuery {
-      llxlife_article {
+  const history = useHistory()
+  const [finish, setFinish] = useState(0)
+  const { data, fetchMore } = useQuery(gql`
+    query GetArticles($offset: Int) {
+      llxlife_article(limit: 10, offset: $offset) {
         id
+        tag
+        title
+        time
+      }
+      llxlife_article_aggregate {
+        aggregate {
+          count
+        }
       }
     }
-  `)
+  `, {
+    variables: { offset: 0 }
+  })
+  function loadMore() {
+    fetchMore({
+      variables: {
+        offset: data.llxlife_article.length
+      }
+    })
+  }
   useEffect(() => {
-    console.log(data)
+    if (data) {
+      if (data.llxlife_article.length == data.llxlife_article_aggregate.aggregate.count) {
+        setFinish(1)
+      }
+    }
   }, [data])
   return (
     <>
       <h1 className="box-title">博文</h1>
-      <div onClick={() => {props.openSub()}} className="article-list">
-        <div className="article-item">
-          <p className="article-time">2021-8-8</p>
-          <p className="article-title">关于陆陆侠的生活</p>
-          <p className="article-tag">作品诞生记</p>
-        </div>
-        <div className="article-item">
-          <p className="article-time">2021-8-8</p>
-          <p className="article-title">关于陆陆侠的生活</p>
-          <p className="article-tag">作品诞生记</p>
-        </div>
-        <div className="article-item">
-          <p className="article-time">2021-8-8</p>
-          <p className="article-title">关于陆陆侠的生活</p>
-          <p className="article-tag">作品诞生记</p>
+      <div className="article-list">
+        { data &&
+          data.llxlife_article.map(item => (
+            <div key={item.id} onClick={() => {props.openSub();history.push('/article/1')}} className="article-item">
+              <p className="article-time">2021-8-8</p>
+              <p className="article-title">{item.title}</p>
+              <p className="article-tag">{item.tag}</p>
+            </div>
+          ))
+        }
+        <div onClick={() => {loadMore()}} className={`article-item load-more ${finish ? 'load-finish' : ''}`}>
+          {finish ? '已达岁月尽头' : '加载更多'}
         </div>
       </div>
     </>

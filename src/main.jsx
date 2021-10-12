@@ -8,10 +8,18 @@ import {
   InMemoryCache,
   ApolloProvider
 } from "@apollo/client"
-
+import { offsetLimitPagination } from "@apollo/client/utilities";
 const client = new ApolloClient({
   uri: 'http://localhost:8080/v1/graphql',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          llxlife_article: offsetLimitPagination()
+        },
+      },
+    },
+  })
 })
 
 ReactDOM.render(
