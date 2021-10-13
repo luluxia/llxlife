@@ -116,7 +116,6 @@ function Box(props) {
   }
   // 关闭二级
   function closeSub() {
-    console.log(boxState.needCloseSub)
     if (!boxState.needCloseSub) {
       closeBox()
     } else {

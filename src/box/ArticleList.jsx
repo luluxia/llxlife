@@ -41,8 +41,8 @@ function ArticleList(props) {
       <div className="article-list">
         { data &&
           data.llxlife_article.map(item => (
-            <div key={item.id} onClick={() => {props.openSub();history.push('/article/1')}} className="article-item">
-              <p className="article-time">2021-8-8</p>
+            <div key={item.id} onClick={() => {props.openSub();history.push('/article/' + item.id)}} className="article-item">
+              <p className="article-time">{new Date(item.time).toLocaleString('cn-ZH', { hour12: false })}</p>
               <p className="article-title">{item.title}</p>
               <p className="article-tag">{item.tag}</p>
             </div>
