@@ -8,6 +8,7 @@ import About from './card/About'
 import ArticleList from './box/ArticleList'
 import Article from './box/Article'
 import PhotoList from './box/PhotoList'
+import Photo from './box/Photo'
 
 import _ from 'lodash'
 import './App.sass'
@@ -86,6 +87,7 @@ function Box(props) {
   const subBoxRef = useRef()
   const coverRef = useRef()
   const history = useHistory()
+  const location = useLocation()
   // 关闭盒子
   function closeBox() {
     setBoxState({
@@ -94,7 +96,7 @@ function Box(props) {
     })
     setTimeout(() => {
       history.push('/')
-    }, 300);
+    }, 300)
   }
   // 打开二级
   function openSub() {
@@ -118,6 +120,10 @@ function Box(props) {
   function closeSub() {
     if (!boxState.needCloseSub) {
       closeBox()
+      subBoxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
+      subBoxRef.current.parentNode.style.position = 'fixed'
+      boxRef.current.parentNode.style.top = 'inherit'
+      boxRef.current.parentNode.style.position = 'absolute'
     } else {
       // 隐藏二级显示一级
       setBoxState({
@@ -137,6 +143,32 @@ function Box(props) {
       }, 300)
     }
   }
+  // 监听URL
+  useEffect(() => {
+    const num = location.pathname.split('/').length
+    if (location.pathname != '/' && num == 2) {
+      // 一级
+      setBoxState({
+        ...boxState,
+        active: 1,
+        sub: 0
+      })
+    } else if (num == 3) {
+      // 二级
+      setBoxState({
+        ...boxState,
+        active: 1,
+        sub: 1
+      })
+      subBoxRef.current.parentNode.style.top = 'inherit'
+      subBoxRef.current.parentNode.style.position = 'absolute'
+    } else {
+      setBoxState({
+        ...boxState,
+        active: 0
+      })
+    }
+  }, [location])
   // 打开盒子
   useEffect(() => {
     if (boxState.active) {
@@ -181,6 +213,9 @@ function Box(props) {
             <Switch>
               <Route path="/article/:id">
                 <Article />
+              </Route>
+              <Route path="/photo/:id">
+                <Photo />
               </Route>
             </Switch>
           </div>
@@ -335,9 +370,8 @@ function App() {
           history.push(url)
           setBoxState({
             ...boxState,
-            active: 1,
             x: e.currentTarget.getClientRects()[0].x + e.currentTarget.clientWidth / 2,
-            y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2,
+            y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2
           })
         } else {
           window.open(url)
@@ -434,30 +468,7 @@ function App() {
         return () => cancelAnimationFrame(requestRef.current)
       })
   }, [])
-  // 监听URL
-  useEffect(() => {
-    const num = location.pathname.split('/').length
-    if (location.pathname != '/' && num == 2) {
-      setBoxState({
-        ...boxState,
-        active: 1,
-        sub: 0
-        // x: e.currentTarget.getClientRects()[0].x + e.currentTarget.clientWidth / 2,
-        // y: e.currentTarget.getClientRects()[0].y + e.currentTarget.clientHeight / 2,
-      })
-    } else if (num == 3) {
-      setBoxState({
-        ...boxState,
-        active: 1,
-        sub: 1
-      })
-    } else {
-      setBoxState({
-        ...boxState,
-        active: 0
-      })
-    }
-  }, [location])
+
   // 恢复隐藏（打开动画）
   useEffect(() => {
     setTimeout(() => {
