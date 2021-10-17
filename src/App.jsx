@@ -9,6 +9,7 @@ import ArticleList from './box/ArticleList'
 import Article from './box/Article'
 import PhotoList from './box/PhotoList'
 import Photo from './box/Photo'
+import FriendList from './box/Friend'
 
 import _ from 'lodash'
 import './App.sass'
@@ -198,6 +199,9 @@ function Box(props) {
               </Route>
               <Route path="/photo">
                 <PhotoList openSub={openSub} />
+              </Route>
+              <Route path="/friend">
+                <FriendList />
               </Route>
             </Switch>
           </div>
