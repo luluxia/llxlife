@@ -51,15 +51,33 @@ function Link() {
   )
 }
 function Card(props) {
+  const [data, setData] = useState({})
+  useEffect(() => {
+    if (props.data && props.data.time) {
+      if (!isNaN(Number(props.data.time))) {
+        props.data.time = Number(props.data.time)
+      }
+      const time = new Intl
+        .DateTimeFormat("cn-ZH", { dateStyle: 'short', timeStyle: 'short', hour12: false })
+        .format(new Date(props.data.time))
+      props.data.subTitle = props.data.subTitle.replace('$TIME$', time)
+    }
+    setData(props.data)
+  }, [props.data])
   return (
     <>
-    <img src={props.data?.img} referrerPolicy="no-referrer" alt="" />
-    <div className="card-cover"></div>
-    <h1 className="title">{props.data?.type}<span>{props.data?.subType}</span></h1>
-    <div className="content skew-title">
-      <h2 style={{fontSize: props.data?.title.length >= 10 && '1.5em'}}>{props.data?.title}</h2>
-      <p>{props.data?.subTitle}</p>
-    </div>
+    {
+      data &&
+      <>
+        <img src={data.img} referrerPolicy="no-referrer" alt="" />
+        <div className="card-cover"></div>
+        <h1 className="title">{props.data?.type}<span>{props.data?.subType}</span></h1>
+        <div className="content skew-title">
+          <h2 style={{fontSize: props.data?.title.length >= 10 && '1.5em'}}>{props.data?.title}</h2>
+          <p>{props.data?.subTitle}</p>
+        </div>
+      </>
+    }
     </>
   )
 }
