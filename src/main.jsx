@@ -15,7 +15,8 @@ const client = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          llxlife_article: offsetLimitPagination()
+          llxlife_article: offsetLimitPagination(['where']),
+          llxlife_photo: offsetLimitPagination(['where'])
         },
       },
     },

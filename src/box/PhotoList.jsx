@@ -6,7 +6,7 @@ function PhotoList(props) {
   const [finish, setFinish] = useState(0)
   const { data, fetchMore } = useQuery(gql`
     query GetPhotos($offset: Int) {
-      llxlife_photo(limit: 10, offset: $offset) {
+      llxlife_photo(limit: 6, offset: $offset) {
         id
         time
         title
