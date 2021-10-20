@@ -129,11 +129,13 @@ function Box(props) {
       scroll: coverRef.current.scrollTop,
       needCloseSub: 1
     })
-    // 锁定一级，使其不跟随滚动条移动
-    boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
-    boxRef.current.parentNode.style.position = 'fixed'
     // 滚动条移至顶部
     coverRef.current.scrollTop = 0
+    setTimeout(() => {
+      // 锁定一级，使其不跟随滚动条移动
+      boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
+      boxRef.current.parentNode.style.position = 'fixed'
+    }, 300)
   }
   // 关闭二级
   function closeSub() {
@@ -154,21 +156,22 @@ function Box(props) {
       subBoxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
       subBoxRef.current.parentNode.style.position = 'fixed'
       // 还原一级状态
+      boxRef.current.parentNode.style.top = 'inherit'
+      boxRef.current.parentNode.style.position = 'absolute'
+      coverRef.current.scrollTop = boxState.scroll
       setTimeout(() => {
-        boxRef.current.parentNode.style.top = 'inherit'
-        boxRef.current.parentNode.style.position = 'absolute'
-        coverRef.current.scrollTop = boxState.scroll
         history.goBack()
       }, 300)
     }
   }
   // 刷新背景
-  function flushCover() {
+  function flushCover(target = '') {
     setTimeout(() => {
-      const target = boxState.sub ? subBoxRef : boxRef
+      // console.log(boxState.sub ? 'subBoxRef' : 'boxRef')
+      const targetRef = target == 'sub' ? subBoxRef : boxRef
       setData({
-        width: target.current.clientWidth + 100,
-        height: target.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : target.current.clientHeight + 100
+        width: targetRef.current.clientWidth + 100,
+        height: targetRef.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : targetRef.current.clientHeight + 100
       })
     }, 0)
   }

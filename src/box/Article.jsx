@@ -24,7 +24,7 @@ function Article(props) {
         ...data.llxlife_article[0],
         html: parser.parse(data.llxlife_article[0].data)
       })
-      props.flushCover()
+      props.flushCover('sub')
     }
   }, [data])
   return (

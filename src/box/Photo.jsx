@@ -14,7 +14,7 @@ function Photo(props) {
   })
   useEffect(() => {
     if (data) {
-      props.flushCover()
+      props.flushCover('sub')
     }
   }, [data])
   return (
