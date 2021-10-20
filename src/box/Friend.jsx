@@ -1,6 +1,8 @@
 import React, { useEffect } from "react"
 import { useQuery, gql } from "@apollo/client"
+import { useHistory } from "react-router"
 function FriendList(props) {
+  const history = useHistory()
   const { data } = useQuery(gql`
     query GetFriends {
       llxlife_friend {
@@ -14,7 +16,7 @@ function FriendList(props) {
   `)
   useEffect(() => {
     if (data) {
-      props.flushCover('sub')
+      props.flushCover()
     }
   }, [data])
   return (
@@ -32,7 +34,7 @@ function FriendList(props) {
             </a>
           ))
         }
-        <div className="article-item load-more">申请友链</div>
+        {/* <div className="article-item load-more">申请友链</div> */}
       </div>
     </>
   )
