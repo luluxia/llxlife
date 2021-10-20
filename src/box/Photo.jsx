@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useQuery, gql } from "@apollo/client"
 import { useParams } from "react-router"
 function Photo(props) {
@@ -12,6 +12,11 @@ function Photo(props) {
   `, {
     variables: { id: id }
   })
+  useEffect(() => {
+    if (data) {
+      props.flushCover()
+    }
+  }, [data])
   return (
     <article className="photo">
       {

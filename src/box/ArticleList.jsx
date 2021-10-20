@@ -33,6 +33,7 @@ function ArticleList(props) {
       if (data.llxlife_article.length == data.llxlife_article_aggregate.aggregate.count) {
         setFinish(1)
       }
+      props.flushCover()
     }
   }, [data])
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useQuery, gql } from "@apollo/client"
 import { useParams } from "react-router"
-import edjsHTML from "editorjs-html"
+import edjsParser from "editorjs-parser"
 function Article(props) {
   const { id } = useParams()
   const { data } = useQuery(gql`
@@ -17,19 +17,20 @@ function Article(props) {
     variables: { id: id }
   })
   const [article, setArticle] = useState({})
-  const edjsParser = edjsHTML()
+  const parser = new edjsParser()
   useEffect(() => {
     if (data) {
       setArticle({
         ...data.llxlife_article[0],
-        html: edjsParser.parse(data.llxlife_article[0].data)
+        html: parser.parse(data.llxlife_article[0].data)
       })
+      props.flushCover()
     }
   }, [data])
   return (
     <article className="article">
       {
-        article && (
+        article.title && (
           <>
             <div className="article-header">
               <div className="article-header-title">

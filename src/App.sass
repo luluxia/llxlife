@@ -26,6 +26,8 @@ img
   overflow: hidden
   transition: transform 0.3s
   transform: translate(-5vw, -5vh)
+#root
+  overflow: hidden
 .flag
   position: absolute
   width: 100vw
@@ -150,7 +152,7 @@ img
 .home
   display: flex
   justify-content: center
-  position: absolute
+  position: fixed
   z-index: 1
   width: 4em
   height: 4em
@@ -195,6 +197,7 @@ img
       font-weight: bold
       margin: 0 0.2em
       transition: color 0.3s, background 0.3s
+      cursor: pointer
       &:hover
         background: #abcd03
         color: #fff
@@ -295,6 +298,7 @@ img
     display: block
 // 通用卡片
 .card
+  cursor: pointer
   .content
     padding: 0
   img
@@ -339,23 +343,24 @@ img
 .article-color
   @include colors(#00A5E3, #00A5E310)
 .photo-color
-  @include colors(#FABE00, #FABE0010)
+  @include colors(#ABCD03, #ABCD0310)
   
 .cover
   pointer-events: none
-  position: absolute
+  position: fixed
   display: flex
-  justify-content: flex-end
+  // justify-content: flex-end
   // justify-content: center
   // align-items: center
   width: 100vw
   height: 100vh
   z-index: 1
   overflow-y: scroll
+  overflow-x: hidden
   &::-webkit-scrollbar
     width: 10px
-    background-color: rgb(255 255 255 / 70%)
-    background-color: rgb(255 255 255 / 0%)
+    // background-color: rgb(255 255 255 / 70%)
+    // background-color: rgb(255 255 255 / 0%)
   &::-webkit-scrollbar-thumb
     background: rgb(0 0 0 / 50%)
     -webkit-border-radius: 100px
@@ -378,6 +383,8 @@ img
   align-items: center
   opacity: 0
   transition: opacity 0.3s
+  z-index: 1
+  pointer-events: none
   &::after
     content: ''
     position: absolute
@@ -395,7 +402,7 @@ img
   height: 400px
   background: #fff
   filter: brightness(1) blur(50px)
-  transition: background 0.6s
+  transition: background 0.6s, height 0.3s
 .box-cover
   position: absolute
   // top: 0
@@ -403,6 +410,7 @@ img
   // left: 0
   // right: 0
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
   min-height: 100vh
@@ -414,6 +422,7 @@ img
   transition: transform 0.3s, opacity 0.3s
 .box
   @include colors(#555, rgb(255 255 255 / 95%))
+  box-shadow: 0 4px rgb(255 255 255 / 95%), 4px 0 rgb(255 255 255 / 95%), -4px 0 rgb(255 255 255 / 95%), 0 -4px rgb(255 255 255 / 95%), 0 4px rgb(255 255 255 / 80%), 4px 0 #fffdf1, -4px 0 #fffdf1, 0 -4px #fffdf1, 0 8px #555, 8px 0 #555, -8px 0 #555, 0 -8px #555
   position: relative
   width: 45em
 .box-content
@@ -426,15 +435,15 @@ img
 // 激活状态
 .cover-active
   pointer-events: all
-  &::-webkit-scrollbar
-    background-color: rgb(255 255 255 / 70%)
+  // &::-webkit-scrollbar
+  //   background-color: rgb(255 255 255 / 70%)
   .box-cover
     transform: scale(1)
     opacity: 1
-  .cover-halftone-color
-    background: #00ffff
-  .cover-halftone
-    opacity: 0.7
+  // .cover-halftone-color
+  //   background: #00ffff
+  // .cover-halftone
+  //   opacity: 0.7
   .hide-box
     // position: fixed
     transform: translate(0, 1em) !important
@@ -453,6 +462,7 @@ img
   width: calc( 50% - 0.5em )
   margin: 0.25em
   transition: border-color 0.3s, box-shadow 0.3s
+  cursor: pointer
   &:hover
     border-color: #e9528e
     box-shadow: 3px 3px rgb(233 82 142 / 10%)
@@ -474,10 +484,11 @@ img
   text-align: center
   border-style: dashed
   margin-top: 1em
+  &:hover
+    color: #e9528e
 .load-finish
   opacity: 0.5
   pointer-events: none
-
 .article-header
   padding-bottom: 0.5em
   margin-bottom: 0.5em
@@ -485,7 +496,30 @@ img
 .article-header-title
   display: flex
   align-items: center
-
+// 博文格式化
+.article-content
+  line-height: 2
+  a
+    color: #E9528E
+  ol, ul
+    margin-left: 1em
+  .blockquote
+    background: #efefef
+    padding: 0.5em
+    border-radius: 0.2em
+    cite
+      width: 100%
+      text-align: right
+      display: block
+      padding-right: 0.5em
+      color: #999
+  .inline-code
+    background: #efefef
+    padding: 0.2em
+    font-family: inherit
+    border-radius: 0.2em
+    color: #707070
+    margin: 0.2em
 // 相册列表
 .photo-item
   width: calc( 100% / 3 - 0.5em )
@@ -527,11 +561,32 @@ img
     margin-right: 0.5em
 .friend-sub
   opacity: 0.6
+
+// 手机端关闭盒子
+.box-close
+  height: 2em
+  top: 1.5em
+  opacity: 0.8
+  cursor: pointer
+  margin-bottom: 1.5em
+  display: none
+  justify-content: center
+  .pixel-bottom
+    display: flex
+    justify-content: center
+    align-items: center
+    font-size: 2em
+    height: 100%
 // 手机端
 @media screen and (max-width: 500px)
-  .cover
-    left: 10px
+  .box-close
+    display: flex
+  // .cover
+  //   left: 10px
+  // .cover-halftone-color
+  //   transform: translate(10px, 0px)
   .box
-    width: 85vw
+    width: 90vw
+    // left: 10px
   .article-item
     width: 100%

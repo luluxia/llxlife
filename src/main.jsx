@@ -10,7 +10,7 @@ import {
 } from "@apollo/client"
 import { offsetLimitPagination } from "@apollo/client/utilities";
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/v1/graphql',
+  uri: 'https://hasura.llx.ink/v1/graphql',
   cache: new InMemoryCache({
     typePolicies: {
       Query: {

@@ -144,6 +144,16 @@ function Box(props) {
       }, 300)
     }
   }
+  // 刷新背景
+  function flushCover() {
+    setTimeout(() => {
+      const target = boxState.sub ? subBoxRef : boxRef
+      setData({
+        width: target.current.clientWidth + 100,
+        height: target.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : target.current.clientHeight + 100
+      })
+    }, 0)
+  }
   // 监听URL
   useEffect(() => {
     const num = location.pathname.split('/').length
@@ -161,8 +171,12 @@ function Box(props) {
         active: 1,
         sub: 1
       })
+      // 还原二级状态
       subBoxRef.current.parentNode.style.top = 'inherit'
       subBoxRef.current.parentNode.style.position = 'absolute'
+      // 锁定一级，使其不跟随滚动条移动
+      boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
+      boxRef.current.parentNode.style.position = 'fixed'
     } else {
       setBoxState({
         ...boxState,
@@ -182,10 +196,14 @@ function Box(props) {
   }, [boxState.active, boxState.sub])
   return (
     <>
+    <div className="cover-halftone" style={{opacity: boxState.active ? '0.7' : ''}}>
+      <div className="cover-halftone-color" style={{
+        width: `${data.width}px`,
+        height: `${data.height}px`,
+        background: boxState.active ? '#00ffff' : ''
+      }}></div>
+    </div>
     <div ref={e => {coverRef.current = e}} className={`${boxState.active ? 'cover-active' : ''} cover`}>
-      <div className="cover-halftone">
-        <div className="cover-halftone-color" style={{width: `${data.width}px`, height: `${data.height}px`}}></div>
-      </div>
       <div
         onClick={() => {closeBox()}}
         className={`box-cover box-article ${boxState.sub ? 'hide-box' : ''}`}
@@ -195,16 +213,19 @@ function Box(props) {
           <div className="box-content pixel-bottom">
             <Switch>
               <Route path="/article">
-                <ArticleList openSub={openSub} />
+                <ArticleList openSub={openSub} flushCover={flushCover} />
               </Route>
               <Route path="/photo">
-                <PhotoList openSub={openSub} />
+                <PhotoList openSub={openSub} flushCover={flushCover} />
               </Route>
               <Route path="/friend">
-                <FriendList />
+                <FriendList flushCover={flushCover} />
               </Route>
             </Switch>
           </div>
+        </div>
+        <div className="box pixel-top box-close">
+          <div className="pixel-bottom">×</div>
         </div>
       </div>
       <div
@@ -216,13 +237,16 @@ function Box(props) {
           <div className="box-content pixel-bottom">
             <Switch>
               <Route path="/article/:id">
-                <Article />
+                <Article flushCover={flushCover} />
               </Route>
               <Route path="/photo/:id">
-                <Photo />
+                <Photo flushCover={flushCover} />
               </Route>
             </Switch>
           </div>
+        </div>
+        <div className="box pixel-top box-close">
+          <div className="pixel-bottom">×</div>
         </div>
       </div>
     </div>
@@ -426,7 +450,8 @@ function App() {
       grids.push([`${x + 1} / ${y + 1} / ${x + 1 + h} / ${y + 1 + w}`])
     })
     // 获取数据
-    fetch("http://localhost:7001/api/get")
+    // fetch("http://localhost:7001/api/get")
+    fetch("https://llxlife-server.llx.ink/api/get")
       .then(response => response.json())
       .then(result => {
         let i = 0

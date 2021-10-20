@@ -34,6 +34,7 @@ function PhotoList(props) {
       if (data.llxlife_photo.length == data.llxlife_photo_aggregate.aggregate.count) {
         setFinish(1)
       }
+      props.flushCover()
     }
   }, [data])
   return (

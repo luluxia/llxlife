@@ -9,7 +9,7 @@
   "dependencies": {
     "@apollo/client": "^3.4.15",
     "dayjs": "^1.10.4",
-    "editorjs-html": "^3.4.2",
+    "editorjs-parser": "^1.5.3",
     "graphql": "^15.6.0",
     "lodash": "^4.17.21",
     "react": "^17.0.0",
