@@ -6,7 +6,7 @@ function ArticleList(props) {
   const [finish, setFinish] = useState(0)
   const { data, fetchMore } = useQuery(gql`
     query GetArticles($offset: Int) {
-      llxlife_article(limit: 10, offset: $offset, where: {hide: {_eq: 0}}) {
+      llxlife_article(limit: 10, offset: $offset, where: {hide: {_eq: 0}}, order_by: {id: desc}) {
         id
         tag
         title

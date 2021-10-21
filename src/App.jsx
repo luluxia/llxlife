@@ -11,7 +11,7 @@ import PhotoList from './box/PhotoList'
 import Photo from './box/Photo'
 import FriendList from './box/Friend'
 
-import _ from 'lodash'
+import _, { set } from 'lodash'
 import './App.sass'
 import { pokemon } from './pokemon.json'
 import { Route, Switch, useHistory, withRouter, useLocation } from 'react-router-dom'
@@ -129,6 +129,10 @@ function Box(props) {
       ...boxState,
       active: 0
     })
+    setData({
+      opacity: 0,
+      subOpacity: 0
+    })
     setTimeout(() => {
       history.push('/')
     }, 300)
@@ -175,6 +179,7 @@ function Box(props) {
         needCloseSub: 0
       })
       setTimeout(() => {
+        flushCover()
         setData({
           ...data,
           opacity: 1,
@@ -224,6 +229,10 @@ function Box(props) {
         ...boxState,
         active: 1,
         sub: 1
+      })
+      setData({
+        ...data,
+        subOpacity: 0
       })
       // 还原二级状态
       subBoxRef.current.parentNode.style.top = 'inherit'
