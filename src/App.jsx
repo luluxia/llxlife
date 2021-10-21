@@ -100,13 +100,29 @@ function Box(props) {
   const { boxState, setBoxState } = useContext(Context)
   const [data, setData] = useState({
     width: 0,
-    height: 0
+    height: 0,
+    opacity: 0,
+    subOpacity: 0
   })
   const boxRef = useRef()
   const subBoxRef = useRef()
   const coverRef = useRef()
   const history = useHistory()
   const location = useLocation()
+  // 打开盒子
+  useEffect(() => {
+    if (boxState.active) {
+      console.log('open')
+      const target = boxState.sub ? subBoxRef : boxRef
+      setData({
+        ...data,
+        width: target.current.clientWidth + 100,
+        height: target.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : target.current.clientHeight + 100,
+        opacity: 0,
+        subOpacity: 0
+      })
+    }
+  }, [boxState.active, boxState.sub])
   // 关闭盒子
   function closeBox() {
     setBoxState({
@@ -129,13 +145,19 @@ function Box(props) {
       scroll: coverRef.current.scrollTop,
       needCloseSub: 1
     })
-    // 滚动条移至顶部
-    coverRef.current.scrollTop = 0
-    setTimeout(() => {
-      // 锁定一级，使其不跟随滚动条移动
-      boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
-      boxRef.current.parentNode.style.position = 'fixed'
-    }, 300)
+    // 锁定一级，使其不跟随滚动条移动
+    // console.log(-coverRef.current.scrollTop)
+    // boxRef.current.parentNode.style.top = `-${777}px`
+    // boxRef.current.parentNode.style.position = 'fixed'
+    // setTimeout(() => {
+    //   // 滚动条移至顶部
+    //   coverRef.current.scrollTop = 0
+    // }, 10)
+    // setTimeout(() => {
+    //   // 锁定一级，使其不跟随滚动条移动
+    //   boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
+    //   boxRef.current.parentNode.style.position = 'fixed'
+    // }, 300)
   }
   // 关闭二级
   function closeSub() {
@@ -152,6 +174,13 @@ function Box(props) {
         sub: 0,
         needCloseSub: 0
       })
+      setTimeout(() => {
+        setData({
+          ...data,
+          opacity: 1,
+          subOpacity: 0
+        })
+      }, 0)
       // 锁定二级，使其不跟随滚动条移动
       subBoxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
       subBoxRef.current.parentNode.style.position = 'fixed'
@@ -169,9 +198,13 @@ function Box(props) {
     setTimeout(() => {
       // console.log(boxState.sub ? 'subBoxRef' : 'boxRef')
       const targetRef = target == 'sub' ? subBoxRef : boxRef
+      console.log(target == 'sub' ? 'subBoxRef' : 'boxRef')
       setData({
+        ...data,
         width: targetRef.current.clientWidth + 100,
-        height: targetRef.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : targetRef.current.clientHeight + 100
+        height: targetRef.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : targetRef.current.clientHeight + 100,
+        opacity: target == 'sub' ? 0 : 1,
+        subOpacity: target == 'sub' ? 1 : 0
       })
     }, 0)
   }
@@ -198,6 +231,8 @@ function Box(props) {
       // 锁定一级，使其不跟随滚动条移动
       boxRef.current.parentNode.style.top = `-${coverRef.current.scrollTop}px`
       boxRef.current.parentNode.style.position = 'fixed'
+      // 恢复滚动条至顶部
+      coverRef.current.scrollTop = 0
     } else {
       setBoxState({
         ...boxState,
@@ -205,16 +240,6 @@ function Box(props) {
       })
     }
   }, [location])
-  // 打开盒子
-  useEffect(() => {
-    if (boxState.active) {
-      const target = boxState.sub ? subBoxRef : boxRef
-      setData({
-        width: target.current.clientWidth + 100,
-        height: target.current.clientHeight >= document.body.clientHeight ? document.body.clientHeight : target.current.clientHeight + 100
-      })
-    }
-  }, [boxState.active, boxState.sub])
   return (
     <>
     <div className="cover-halftone" style={{opacity: boxState.active ? '0.7' : ''}}>
@@ -228,7 +253,10 @@ function Box(props) {
       <div
         onClick={() => {closeBox()}}
         className={`box-cover box-article ${boxState.sub ? 'hide-box' : ''}`}
-        style={{transformOrigin: `${boxState.x}px ${boxState.y}px`}}
+        style={{
+          transformOrigin: `${boxState.x}px ${boxState.y}px`,
+          opacity: data.opacity
+        }}
       >
         <div onClick={e => {e.stopPropagation()}} ref={e => {boxRef.current = e}} className="box pixel-top">
           <div className="box-content pixel-bottom">
@@ -252,7 +280,11 @@ function Box(props) {
       <div
         onClick={() => {closeSub()}}
         className={`box-cover box-article ${!boxState.sub ? 'hide-box' : ''}`}
-        style={{position: 'fixed', transformOrigin: `${boxState.x}px ${boxState.y}px`}}
+        style={{
+          position: 'fixed',
+          transformOrigin: `${boxState.x}px ${boxState.y}px`,
+          opacity: data.subOpacity
+        }}
       >
         <div onClick={e => {e.stopPropagation()}} ref={e => {subBoxRef.current = e}} className="box pixel-top">
           <div className="box-content pixel-bottom">
@@ -556,8 +588,10 @@ function App() {
 
     state.current.bodyRect.w = body.clientWidth
     state.current.bodyRect.h = body.clientHeight
-    // hide()
-  })
+    setTimeout(() => {
+      document.body.style.pointerEvents = 'inherit'
+    }, 1000)
+  }, [])
   return (
     <>
     <Context.Provider value={{...data, state, boxState, setBoxState}}>
