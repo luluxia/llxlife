@@ -112,7 +112,6 @@ function Box(props) {
   // 打开盒子
   useEffect(() => {
     if (boxState.active) {
-      console.log('open')
       const target = boxState.sub ? subBoxRef : boxRef
       setData({
         ...data,
@@ -201,9 +200,7 @@ function Box(props) {
   // 刷新背景
   function flushCover(target = '') {
     setTimeout(() => {
-      // console.log(boxState.sub ? 'subBoxRef' : 'boxRef')
       const targetRef = target == 'sub' ? subBoxRef : boxRef
-      console.log(target == 'sub' ? 'subBoxRef' : 'boxRef')
       setData({
         ...data,
         width: targetRef.current.clientWidth + 100,
@@ -271,10 +268,10 @@ function Box(props) {
           <div className="box-content pixel-bottom">
             <Switch>
               <Route path="/article">
-                <ArticleList openSub={openSub} flushCover={flushCover} />
+                <ArticleList sub={boxState.sub} openSub={openSub} flushCover={flushCover} />
               </Route>
               <Route path="/photo">
-                <PhotoList openSub={openSub} flushCover={flushCover} />
+                <PhotoList sub={boxState.sub} openSub={openSub} flushCover={flushCover} />
               </Route>
               <Route path="/friend">
                 <FriendList flushCover={flushCover} />

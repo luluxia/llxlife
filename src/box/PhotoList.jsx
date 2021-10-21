@@ -30,7 +30,7 @@ function PhotoList(props) {
     })
   }
   useEffect(() => {
-    if (data) {
+    if (data && !props.sub) {
       if (data.llxlife_photo.length == data.llxlife_photo_aggregate.aggregate.count) {
         setFinish(1)
       }

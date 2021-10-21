@@ -29,7 +29,7 @@ function ArticleList(props) {
     })
   }
   useEffect(() => {
-    if (data) {
+    if (data && !props.sub) {
       if (data.llxlife_article.length == data.llxlife_article_aggregate.aggregate.count) {
         setFinish(1)
       }
