@@ -36,7 +36,7 @@ function PhotoList(props) {
       }
       props.flushCover()
     }
-  }, [data])
+  }, [data, props.sub])
   return (
     <>
       <h1 className="box-title">相册</h1>

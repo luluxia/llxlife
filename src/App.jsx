@@ -170,6 +170,11 @@ function Box(props) {
       subBoxRef.current.parentNode.style.position = 'fixed'
       boxRef.current.parentNode.style.top = 'inherit'
       boxRef.current.parentNode.style.position = 'absolute'
+      setData({
+        ...data,
+        opacity: 0,
+        subOpacity: 0
+      })
     } else {
       // 隐藏二级显示一级
       setBoxState({

@@ -35,7 +35,7 @@ function ArticleList(props) {
       }
       props.flushCover()
     }
-  }, [data])
+  }, [data, props.sub])
   return (
     <>
       <h1 className="box-title">博文</h1>
